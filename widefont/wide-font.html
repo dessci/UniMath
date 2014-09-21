@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Wide font test</title>
+  <style>
+    @font-face {
+      font-family: 'widefont';
+      src:url('widefont.woff') format('woff');
+      font-weight: normal;
+      font-style: normal;
+    }
+    .widefont {
+      font-family: 'widefont';
+  	  font-style: normal;
+  	  font-weight: normal;
+  	  font-variant: normal;
+  	  text-transform: none;
+  	  line-height: 1;
+  	  -webkit-font-smoothing: antialiased;
+  	  -moz-osx-font-smoothing: grayscale;
+    }
+  </style>
+</head>
+<body>
+  <p>Touching characters: <span class="widefont">AB<span style="font-size:150%;">C</span>A<span style="font-size:200%;">B</span>C</span></p>
+  <p>Overlapping characters: <span class="widefont">Z<span style="font-size:150%;">Z</span>Z</span>normal text</p>
+  <p>Single characters of increasing width:</p>
+  <ol>
+    <li><span class="widefont">A</span></li>
+    <li><span class="widefont">B</span></li>
+    <li><span class="widefont">C</span></li>
+    <li><span class="widefont">D</span></li>
+    <li><span class="widefont">E</span></li>
+    <li><span class="widefont">F</span></li>
+    <li><span class="widefont">G</span></li>
+    <li><span class="widefont">H</span></li>
+    <li><span class="widefont">I</span></li>
+    <li><span class="widefont">J</span></li>
+    <li><span class="widefont">K</span></li>
+    <li><span class="widefont">L</span></li>
+    <li><span class="widefont">M</span></li>
+    <li><span class="widefont">N</span></li>
+    <li><span class="widefont">O</span></li>
+  </ol>
+</body>
+</html>

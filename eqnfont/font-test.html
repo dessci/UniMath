@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Font test</title>
+  <link rel="stylesheet" href="eqnfont.css" type="text/css">
+  <style>
+    p.box {
+      width: 50%;
+      line-height: 1;
+      border: 1px solid black;
+    }
+    img {
+      display: block;
+      margin: 0 auto;
+    }
+  </style>
+</head>
+<body>
+  <p class="box">This is an inline <span class="eqnfont eqnA">A</span>, equation.<br>
+    Each equation is deliberately followed by some punctuation
+    <span class="eqnfont eqnB">B</span>, so the spacing after
+    the equation is shown, <span class="eqnfont eqnC">C</span>.<br>
+    The following equation is an example of an inline expression, which is split into
+    several characters: <span class="eqnfont"><span class="eqnD">D</span><span class="eqnE">E</span><span class="eqnF">F</span><span class="eqnG">G</span><span class="eqnH">H</span></span>.
+    This makes it possible, using the CSS property <code>word-wrap: break-word</code>,
+    to break an inline equation at specific points, if the browser has no other option.<br>
+    There is also a zero-width-space character <code>&amp;#8203;</code> which leads to
+    <span class="eqnfont eqnD">D</span>&#8203;<span class="eqnfont eqnE">E</span>&#8203;<span class="eqnfont eqnF">F</span>&#8203;<span class="eqnfont eqnG">G</span>&#8203;<span class="eqnfont eqnH">H</span>,
+    not sure about the browser support, though.<br>
+    Tall expressions may extend into the previous and/or following
+    line, like this one <span class="eqnfont eqnJ">J</span>.<br>
+    This can be avoided by rendering the expression at, e.g., 25% of its normal size
+    and then using <code>font-size: 400%</code> in the following way:
+    <span class="eqnfont eqnI">I</span> (possibly also adjusting the baseline).<br>
+    These were some examples of how to <span>use</span> a web font for showing
+    inline math expressions.</p>
+  <p>And here is a display style equation:</p>
+  <img src="eqnblock.svg" style="width: 70.625ex; height: 15.625ex;">
+</body>
+</html>

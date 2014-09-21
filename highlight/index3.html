@@ -1,0 +1,384 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Twelve Ways of Counting - janmr blog</title>
+    <link rel="stylesheet" type="text/css" href="normalize.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({
+            tex2jax: { inlineMath: [], displayMath: [] },
+            "HTML-CSS": { styles: { ".MathJax_Display": { margin: "0" } } }
+        });
+    </script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+    <style>
+        #wrapper {
+            max-width: 50em;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .mthi { font-style: italic; }
+        #unimath-trigger {
+            position: fixed;
+            font-size: 150%;
+            right: 0.15em;
+            bottom: 0.15em;
+            border: 0.1em solid #eee;
+            border-radius: 0.2em;
+        }
+        #unimath-trigger:hover {
+            cursor: pointer;
+        }
+        .unimath {
+            border: 0.2em solid transparent;
+            border-radius: 0.5em;
+            margin: -0.2em;
+        }
+        body.unimath-on .unimath {
+            border: 0.2em solid #ddd;
+            background-color: #eee;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <i id="unimath-trigger" class="fa fa-superscript fa-fw"></i>
+
+    <div id="wrapper">
+        <h1>janmr blog</h1>
+
+        <div class="post">
+
+            <h2>Twelve Ways of Counting</h2>
+
+            <div class="post-body">
+                <p>All cases are shown and numbered in this table:</p>
+                <table>
+                    <tbody>
+                        <tr>
+                            <td>balls per urn</td>
+                            <td>unrestricted</td>
+                            <td>&le; 1</td>
+                            <td>&ge; 1</span></td>
+                        </tr>
+                        <tr>
+                            <td><span class="mthi">n</span> labeled balls, <span class="mthi">m</span> labeled urns</td>
+                            <td>(1)</td>
+                            <td>(5)</td>
+                            <td>(9)</td>
+                        </tr>
+                        <tr>
+                            <td><span class="mthi">n</span> unlabeled balls, <span class="mthi">m</span> labeled urns</td>
+                            <td>(2)</td>
+                            <td>(6)</td>
+                            <td>(10)</td>
+                        </tr>
+                        <tr>
+                            <td><span class="mthi">n</span> labeled balls, <span class="mthi">m</span> unlabeled urns</td>
+                            <td>(3)</td>
+                            <td>(7)</td>
+                            <td>(11)</td>
+                        </tr>
+                        <tr>
+                            <td><span class="mthi">n</span> unlabeled balls, <span class="mthi">m</span> unlabeled urns</td>
+                            <td>(4)</td>
+                            <td>(8)</td>
+                            <td>(12)</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <p>
+                    I will now consider each one. Not row- or columnwise, but in a rather thematic way. The number of arrangements will be denoted
+                    <span class="unimath"><script type="math/tex">C_k(m,n)</script></span>
+                    for <span class="mthi">m</span> urns, <span class="mthi">n</span> balls, for each case <span class="mthi">k</span> = 1, 2, &#8230;, 12.
+                </p>
+
+                <h3>The Trivial (7, <span>8</span>)</h3>
+
+                <p>
+                    When the urns are unlabeled and a maximum of one ball may be put in each urn, the answer is trivial.
+                    Different ways of placing the balls can not be distinguished since the urns are unlabeled, so there is only one way to do it,
+                </p>
+
+                <div class="unimath"><script type="math/tex; mode=display">C_7(m,n) = C_8(m,n) = 1, \quad n \leq m.</script></div>
+
+                <h3>The Usual Suspects (1, 2, 5, 6)</h3>
+
+                <p>If both the urns and the balls are labeled and there is no restriction on the number of balls in each urn (Case 1), we can for each of the <span class="mthi">n</span> balls choose among all <span class="mthi">m</span> urns, leading to</p>
+
+                <div class="unimath">
+                    <script type="math/tex; mode=display">
+                        C_1(m,n) = m^n.
+                    </script>
+                </div>
+
+                <p>This is equivalent to counting <em>n-tuples of m things</em>, where each element of the tuple corresponds to an urn, and the value of that element corresponds to the number of the ball that goes into that urn. (Note that here, and in all the following cases, different orderings of the balls <em>within each urn</em> are not distinguished.)</p>
+
+                <p>If, however, there can be at most one ball in each urn (Case 5), we can not place each ball as we please. We have <span class="mthi">m</span> urns to choose from for the first ball, <span class="mthi">m</span>-1 for the second, <span class="mthi">m</span>-2 for the third, leading to</p>
+
+                <div class="unimath">
+                    <script type="math/tex; mode=display">
+                        C_5(m,n) = m (m-1) \cdots (m-n+1) = \frac{m!}{(m-n)!}, \quad n \leq m,
+                    </script>
+                </div>
+
+                <p>which is called the number of <em>n-permutations of m things</em>. We now remove the labels from the balls (Case 6). So where exchanging two balls in the setup just considered would lead to a different arrangement, it is no longer. For any choice of <span class="mthi">n</span> urns, how many of the permutations have the balls placed in exactly these urns? The answer is the number of ways to arrange/permute <span class="mthi">n</span> things, namely <em>n!</em>, so we simply divide by this number and arrive at</p>
+
+                <div class="unimath">
+                    <script type="math/tex; mode=display">
+                        C_6(m,n) = \frac{m!}{(m-n)! n!} = {m \choose n}, \quad n \leq m,
+                    </script>
+                </div>
+
+                <p>
+                    the number of <em>n-combinations of m things</em> and <span class="unimath"><script type="math/tex">{m \choose n}</script></span>
+                    is a binomial coefficient. Let us now introduce the number <span class="unimath"><script type="math/tex">u_k, k=1, \ldots, n</script></span>
+                    as the urn number that ball <em>k</em> goes into. Using this notation we see that the number of <span class="mthi">n</span>-combinations of <span class="mthi">m</span> things just considered is equivalent to the number of tuples
+                    <span class="unimath"><script type="math/tex">(u_1, u_2, \ldots, u_n)</script></span> that fulfill
+                </p>
+
+                <div class="unimath">
+                    <script type="math/tex; mode=display">
+                        1 \leq u_1 < u_2 < u_3 < \cdots < u_n \leq m.
+                    </script>
+                </div>
+
+                <p>
+                    This will come in handy when we turn to Case 2, where we allow any number of balls in each urn&#8212;but we still do not distinguish exchanging two balls between two urns. Using the notation just introduced we are thus interested in the number tuples
+                    <span class="unimath"><script type="math/tex">(u_1, u_2, \ldots, u_n)</script></span> that fulfill
+                </p>
+
+                <div class="unimath">
+                    <script type="math/tex; mode=display">
+                        1 \leq u_1 \leq u_2 \leq u_3 \leq \cdots \leq u_n \leq m
+                    </script>
+                </div>
+
+                <p>But any <em>less than or equal</em> to can easily be transformed into <em>strictly less than</em> when considering integers,</p>
+
+                <div class="unimath">
+                    <script type="math/tex; mode=display">
+                        1 \leq u_1 < u_2 + 1 < u_3 + 2 < \cdots < u_n + n - 1 \leq m + n - 1,
+                    </script>
+                </div>
+
+                <p>and we have now transformed the enumeration problem for <em>n-multicombinations of m things</em> into an equivalent <span class="mthi">n</span>-combinations of <em>m+n-1</em> things enumeration problem, so</p>
+
+                <div class="unimath">
+                    <script type="math/tex; mode=display">
+                        C_2(m,n) = {m+n-1 \choose n}.
+                    </script>
+                </div>
+
+                <h3>Set Partitions (3, 9, 11)</h3>
+
+                <p>
+                    Let us first consider Case 11 where the <span class="mthi">n</span> balls are labeled, the <span class="mthi">m</span> urns are unlabeled,
+                    and each urn must contain at least one ball. We first observe that the number of arrangements for this case is equivalent to splitting the
+                    set <span class="unimath">{1, 2, &#8230;, <span class="mthi">n</span>}</span> into <span class="mthi">m</span> disjoint subsets whose
+                    union is the whole set. This is called the number of <em>(set) partitions of</em>
+                    <span class="unimath">{1, 2, &#8230;, <span class="mthi">n</span>}</span> <em>into m parts</em>,
+                </p>
+
+                <div class="unimath">
+                    <script type="math/tex; mode=display">
+                        C_{11}(m,n) = \left\{ {n \atop m} \right\}, \quad n \geq m \geq 1.
+                    </script>
+                </div>
+
+                <p>where this curly bracket notation denote the Stirling numbers of the second kind. But this is just answering a question by posing another question. It is easy to see that</p>
+
+                <div class="unimath">
+                    <script type="math/tex; mode=display">
+                        \left\{ {n \atop n} \right\} = \left\{ {n \atop 1} \right\} = 1, \quad n \geq 1, \quad \mbox{and} \quad \left\{ {n \atop m} \right\} = 0, \quad m > n > 0,
+                    </script>
+                </div>
+
+                <p>and for completeness we define the (agreed-upon) boundary cases</p>
+
+                <div class="unimath">
+                    <script type="math/tex; mode=display">
+                        \left\{ {0 \atop 0} \right\} = 1 \quad \mbox{and} \quad \left\{ {n \atop 0} \right\} = 0, \quad n \geq 1.
+                    </script>
+                </div>
+
+                <p>
+                    Imagine now that we want to list the <span class="unimath">
+                        <script type="math/tex">
+                            \left\{ {n \atop m} \right\}
+                        </script>
+                    </span> set partitions of {1, 2, &#8230;, <span class="mthi">n</span>} into <span class="mthi">m</span> parts, <span class="unimath">
+                        <script type="math/tex">
+                            n > m > 1
+                        </script>
+                    </span>, using an inductive/recursive approach. First we list the arrangements that contain the one-element set {<span class="mthi">n</span>} as one of the parts. This can be done by listing the <span class="unimath">
+                        <script type="math/tex">
+                            \left\{ {n-1 \atop m-1} \right\}
+                        </script>
+                    </span> set partitions of {1, 2, &#8230;, <span class="mthi">n</span>-1} into <span class="mthi">m</span>-1 parts and simply adding {<span class="mthi">n</span>} to each arrangement. We then list the <span class="unimath">
+                        <script type="math/tex">
+                            \left\{ {n-1 \atop m} \right\}
+                        </script>
+                    </span> set partitions of {1, 2, &#8230;, <span class="mthi">n</span>-1} into <span class="mthi">m</span> parts. For each of these arrangements, we can add the element <span class="mthi">n</span> to <em>each</em> of the <span class="mthi">m</span> parts. We thereby list all the arrangements where the part containing the element <span class="mthi">n</span> contains at least one other element. Together with the border cases above, we now have the recursive definition
+                </p>
+
+                <div class="unimath">
+                    <script type="math/tex; mode=display">
+                        \left\{ {n \atop m} \right\} = \left\{ {n-1 \atop m-1} \right\} + m \left\{ {n-1 \atop m} \right\}, \quad n > m > 1.
+                    </script>
+                </div>
+
+                <p>
+                    Case 9 is similar to the one just considered, except the urns are now labeled. This means that if we swap the contents of any two urns, we have a new arrangement. And since all the parts are different (they are disjoint subsets), we have to count all <span class="unimath">
+                        <script type="math/tex">
+                            m!
+                        </script>
+                    </span> permutations of the parts for each set partition of Case 11, so
+                </p>
+
+                <div class="unimath">
+                    <script type="math/tex; mode=display">
+                        C_9(m,n) = m! \left\{ {n \atop m} \right\}, \quad n \geq m \geq 1.
+                    </script>
+                </div>
+
+                <p>We now go to Case 3 where the balls are labeled and the urns are unlabeled, like Case 11, but where any number of urns may be empty. So we can simply use the counting of Case 11 and add the results of using exactly 1, 2, &#8230;, <span class="mthi">m</span> urns,</p>
+
+                <div class="unimath">
+                    <script type="math/tex; mode=display">
+                        C_3(m,n) = \sum_{k=1}^m \left\{ {n \atop k} \right\}.
+                    </script>
+                </div>
+
+                <p>You can read more about Sterling numbers in, e.g., <a href="http://www-cs-faculty.stanford.edu/~uno/gkp.html">Concrete Mathematics</a> by Graham, Knuth, and Patashnik.</p>
+
+                <h3>Integer Compositions (10)</h3>
+
+                <p>If unlabeled balls have to be placed in labeled urns with at least one ball in each urn, we can visualize an arrangement like this,</p>
+
+                <div style="text-align: center;"><strong>OO|O|OOO|OO</strong>,</div>
+
+                <p>meaning 2 balls in the first urn, 1 in the second, 3 in the third, and 2 in the fourth urn (<span class="mthi">m</span>=4 and <span class="mthi">n</span>=8 in this example). So counting the arrangements for Case 10 is equivalent to counting how many ways we can place <span class="mthi">m</span>-1 seperators, &#8216;<strong>|</strong>&#8216;, among the <span class="mthi">n</span>-1 places in between the <strong>O</strong>&#8216;s, leading to</p>
+
+                <div class="unimath">
+                    <script type="math/tex; mode=display">
+                        C_{10}(m,n) = {n-1 \choose m-1}, \quad n \geq m.
+                    </script>
+                </div>
+
+                <p>The example above illustrates that 8=2+1+3+2 and is called a composition of the integer 8 into 4 parts. So enumerating the ways to place <span class="mthi">n</span> unlabeled balls in <span class="mthi">m</span> labeled urns with at least one ball in each urn is equivalent to counting the <em>compositions of the integer m into n parts</em>.</p>
+
+                <h3>Integer Partitions (4, 12)</h3>
+
+                <p>Case 12 has <span class="mthi">n</span> unlabeled balls, <span class="mthi">m</span> unlabeled urns and each urn must contain at least one ball. This is similar to Case 10 just considered, except for the labeling of the urns. So we need to count the ways to write the integer <span class="mthi">n</span> as a sum of <span class="mthi">m</span> positive integers, but where the ordering of the parts does not matter. Each such arrangement is called a <em>partition of n into m parts</em>. We use the notation</p>
+
+                <div class="unimath">
+                    <script type="math/tex; mode=display">
+                        C_{12}(m,n) = \left| {n \atop m} \right|
+                    </script>
+                </div>
+
+                <p>for the number of partitions of <span class="mthi">n</span> into <span class="mthi">m</span> parts. As we did for set partitions, we will seek a recursively defined expression. We see that</p>
+
+                <div class="unimath">
+                    <script type="math/tex; mode=display">
+                        \left| {n \atop n} \right| = \left| {n \atop 1} \right| = 1, \quad n \geq 1, \quad \mbox{and} \quad \left| {n \atop m} \right| = 0, \quad m > n > 0,
+                    </script>
+                </div>
+
+                <p>and the boundary conditions</p>
+
+                <div class="unimath">
+                    <script type="math/tex; mode=display">
+                        \left| {0 \atop 0} \right| = 1 \quad \mbox{and} \quad \left| {n \atop 0} \right| = 0, \quad n \geq 1.
+                    </script>
+                </div>
+
+                <p>In the general case of partitioning <span class="mthi">n</span> into <span class="mthi">m</span> parts, we can split the partitions into those that have at least one 1 among the parts, and those where each part is greater than 1. The first type can be obtained by listing all partitions of <span class="mthi">n</span>-1 into <span class="mthi">m</span>-1 parts, where a 1 could added to each arrangement, and the second type can be obtaining by listing all partitions of <span class="mthi">n</span>-<span class="mthi">m</span> into <span class="mthi">m</span> parts, where 1 could be added to each part. We thus have</p>
+
+                <div class="unimath">
+                    <script type="math/tex; mode=display">
+                        \left| {n \atop m} \right| = \left| {n-1 \atop m-1} \right| + \left| {n-m \atop m} \right|, \quad n > m > 1.
+                    </script>
+                </div>
+
+                <p>Finally for Case 4, with reasoning similar to that of set partitioning (Case 3), when the urns are unlabeled and any urn is allowed to be empty, it is equivalent to adding the counts for non-empty urns for 1, 2, &#8230;, <span class="mthi">m</span> urns,</p>
+
+                <div class="unimath">
+                    <script type="math/tex; mode=display">
+                        C_4(m,n) = \sum_{k=1}^m \left| {n \atop k} \right|.
+                    </script>
+                </div>
+
+                <h3>Final remarks</h3>
+
+                <p>All twelve case can be summarized in the following table:</p>
+
+                <table>
+                    <tbody>
+                        <tr>
+                            <td>balls per urn</td>
+                            <td>unrestricted</td>
+                            <td>&le; 1</td>
+                            <td>&ge; 1</td>
+                        </tr>
+                        <tr>
+                            <td><span class="mthi">n</span> labeled balls, <span class="mthi">m</span> labeled urns</td>
+                            <td><span class="mthi">n</span>-tuples of <span class="mthi">m</span> things</td>
+                            <td><span class="mthi">n</span>-permutations of <span class="mthi">m</span> things</td>
+                            <td>Set partitions of {1, &#8230;, <span class="mthi">n</span>} into <span class="mthi">m</span> ordered parts</td>
+                        </tr>
+                        <tr>
+                            <td><span class="mthi">n</span> unlabeled balls, <span class="mthi">m</span> labeled urns</td>
+                            <td><span class="mthi">n</span>-multicombinations of <span class="mthi">m</span> things</td>
+                            <td><span class="mthi">n</span>-combinations of <span class="mthi">m</span> things</td>
+                            <td>Compositions of <span class="mthi">n</span> into <span class="mthi">m</span> parts</td>
+                        </tr>
+                        <tr>
+                            <td><span class="mthi">n</span> labeled balls, <span class="mthi">m</span> unlabeled urns</td>
+                            <td>Set partitions of {1, &#8230;, <span class="mthi">n</span>} into &le; <span class="mthi">m</span> parts</td>
+                            <td><span class="mthi">n</span> pigeons into <span class="mthi">m</span> holes</td>
+                            <td>Set partitions of {1, &#8230;, <span class="mthi">n</span>} into <span class="mthi">m</span> parts</td>
+                        </tr>
+                        <tr>
+                            <td><span class="mthi">n</span> unlabeled balls, <span class="mthi">m</span> unlabeled urns</td>
+                            <td>Partitions of <span class="mthi">n</span> into &le; <span class="mthi">m</span> parts</td>
+                            <td><span class="mthi">n</span> pigeons into <span class="mthi">m</span> holes</td>
+                            <td>Partitions of <span class="mthi">n</span> into <span class="mthi">m</span> parts</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <p>This table also appears in in Section&nbsp;7.2.1.4, Fascicle&nbsp;3, Volume&nbsp;4 of <a href="http://www-cs-faculty.stanford.edu/~uno/taocp.html">The Art of Computer Programming</a> by <a href="http://www-cs-faculty.stanford.edu/~uno/">Donald E. Knuth</a> where The Twelvefold Way is briefly mentioned. The Twelvefold Way is originally treated in the book <a href="http://www-math.mit.edu/~rstan/ec/">Enumerative Combinatorics, Volume&nbsp;1</a> by <a href="http://www-math.mit.edu/~rstan/">Richard P. Stanley</a>.</p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <script>
+        (function () {
+            function attach() {
+                var unimathEls = document.getElementsByClassName('unimath');
+                function commonAction() {
+                    alert('To do...');
+                }
+                Array.prototype.forEach.call(unimathEls, function (el) {
+                    el.addEventListener('click', commonAction, false);
+                });
+            }
+
+            var el = document.getElementById('unimath-trigger');
+            el.addEventListener('click', function () {
+                document.body.className = 'unimath-on';
+                attach();
+            }, false);
+        })();
+    </script>
+</body>
+</html>

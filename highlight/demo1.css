@@ -1,0 +1,72 @@
+﻿#wrapper {
+  max-width: 50em;
+  margin-left: auto;
+  margin-right: auto; }
+
+.mthi {
+  font-style: italic; }
+
+#unimath-trigger {
+  position: fixed;
+  font-size: 150%;
+  right: 0.15em;
+  bottom: 0.15em;
+  border: 0.1em solid #eee;
+  border-radius: 0.2em; }
+  #unimath-trigger:hover {
+    cursor: pointer; }
+
+#unimath-triggermenu {
+  display: none;
+  position: fixed;
+  right: 0.2em;
+  bottom: 2em;
+  border: 0.2em solid #4f9fcf;
+  border-radius: 0.2em; }
+  #unimath-triggermenu .header {
+    background-color: #4f9fcf;
+    padding: 0.2em; }
+  #unimath-triggermenu ul {
+    list-style: none;
+    padding: 0;
+    margin: 0; }
+  #unimath-triggermenu li {
+    padding: 0.2em; }
+  #unimath-triggermenu li:hover {
+    background-color: #9CECFF;
+    cursor: pointer; }
+
+.unimath {
+  position: relative;
+  border: 0.2em solid transparent;
+  border-radius: 0.5em;
+  padding: 0.1em;
+  margin: -0.3em; }
+  .unimath > .focus {
+    display: none; }
+  .unimath:hover > .focus {
+    position: absolute;
+    right: 0.2em;
+    bottom: 0.2em;
+    display: block;
+    width: 2em; }
+  .unimath:hover > .focus > .zoom {
+    opacity: 1; }
+  .unimath:hover > .focus > .menu {
+    opacity: 0.1; }
+  .unimath:hover > .focus:hover > .zoom {
+    opacity: 0.1; }
+  .unimath:hover > .focus:hover > .zoom:hover {
+    opacity: 1; }
+  .unimath:hover > .focus:hover > .menu:hover {
+    opacity: 1; }
+
+span.unimath:hover > .focus {
+  right: -2.2em;
+  background-color: white; }
+
+body.unimath-on .unimath, .unimath:hover {
+  border: 0.2em solid #4f9fcf;
+  cursor: pointer; }
+
+/*# sourceMappingURL=demo1.css.map */

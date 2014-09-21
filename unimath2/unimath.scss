@@ -1,0 +1,87 @@
+﻿.unimath {
+    padding: 0.5em 0;
+    position: relative;
+    &:hover {
+        cursor: pointer;
+    }
+    & > .nofocus {
+        position: absolute;
+        right: 0.2em;
+        bottom: 0.2em;
+        opacity: 0.1;
+    }
+    &:hover > .nofocus {
+        display: none;
+    }
+    & > .focus {
+        display: none;
+    }
+    &:hover > .focus {
+        position: absolute;
+        right: 0.2em;
+        bottom: 0.2em;
+        display: inline;
+    }
+    &:hover > .focus > .zoom {
+        opacity: 1;
+    }
+    &:hover > .focus > .menu {
+        opacity: 0.1;
+    }
+    &:hover > .focus:hover > .zoom {
+        opacity: 0.1;
+    }
+    &:hover > .focus:hover > .zoom:hover {
+        opacity: 1;
+    }
+    &:hover > .focus:hover > .menu:hover {
+        opacity: 1;
+    }
+}
+
+dialog {
+    border: 0.1em solid gray;
+    border-radius: 0.2em;
+    margin: auto;
+    padding: 0;
+    max-width: 100%;
+    overflow: hidden;
+}
+
+#unimath-zoom {
+    .eqn, button {
+        padding: 0;
+    }
+    .eqn {
+        font-size: 200%;
+        margin: 0.2em;
+        overflow: hidden;
+    }
+    button {
+        margin: 0.4em;
+    }
+}
+
+#unimath-menu {
+    ul {
+        margin: 0;
+        padding: 0;
+    }
+    li {
+        display: block;
+        padding: 0.2em;
+    }
+    li:hover {
+        background-color: #eef;
+        cursor: pointer;
+    }
+}
+
+#unimath-source {
+    top: 0;
+    pre {
+        font-size: 80%;
+        margin: 0.5em;
+        padding: 0;
+    }
+}

@@ -1,0 +1,65 @@
+﻿.unimath {
+  padding: 0.5em 0;
+  position: relative; }
+  .unimath:hover {
+    cursor: pointer; }
+  .unimath > .nofocus {
+    position: absolute;
+    right: 0.2em;
+    bottom: 0.2em;
+    opacity: 0.1; }
+  .unimath:hover > .nofocus {
+    display: none; }
+  .unimath > .focus {
+    display: none; }
+  .unimath:hover > .focus {
+    position: absolute;
+    right: 0.2em;
+    bottom: 0.2em;
+    display: inline; }
+  .unimath:hover > .focus > .zoom {
+    opacity: 1; }
+  .unimath:hover > .focus > .menu {
+    opacity: 0.1; }
+  .unimath:hover > .focus:hover > .zoom {
+    opacity: 0.1; }
+  .unimath:hover > .focus:hover > .zoom:hover {
+    opacity: 1; }
+  .unimath:hover > .focus:hover > .menu:hover {
+    opacity: 1; }
+
+dialog {
+  border: 0.1em solid gray;
+  border-radius: 0.2em;
+  margin: auto;
+  padding: 0;
+  max-width: 100%;
+  overflow: hidden; }
+
+#unimath-zoom .eqn, #unimath-zoom button {
+  padding: 0; }
+#unimath-zoom .eqn {
+  font-size: 200%;
+  margin: 0.2em;
+  overflow: hidden; }
+#unimath-zoom button {
+  margin: 0.4em; }
+
+#unimath-menu ul {
+  margin: 0;
+  padding: 0; }
+#unimath-menu li {
+  display: block;
+  padding: 0.2em; }
+#unimath-menu li:hover {
+  background-color: #eef;
+  cursor: pointer; }
+
+#unimath-source {
+  top: 0; }
+  #unimath-source pre {
+    font-size: 80%;
+    margin: 0.5em;
+    padding: 0; }
+
+/*# sourceMappingURL=unimath.css.map */

@@ -1,0 +1,57 @@
+@font-face {
+	font-family: 'eqnfont';
+	src:url('eqnfont.woff');
+	font-weight: normal;
+	font-style: normal;
+}
+.eqnfont {
+	font-family: 'eqnfont';
+	font-style: normal;
+	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
+	//line-height: 1;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	word-wrap: break-word;
+}
+.eqnA {
+  font-size: 100.0%;
+  vertical-align: 0.05340545751893955em;
+}
+.eqnB {
+  font-size: 128.0%;
+  vertical-align: -0.20216796825177924em;
+}
+.eqnC {
+  font-size: 118.0%;
+  vertical-align: -0.06830049223987461em;
+}
+.eqnD {
+  font-size: 105.0%;
+  vertical-align: -0.05743117559523808em;
+}
+.eqnE {
+  font-size: 100.0%;
+  vertical-align: 0.0em;
+}
+.eqnF {
+  font-size: 115.0%;
+  vertical-align: -0.03672724184782608em;
+}
+.eqnG {
+  font-size: 100.0%;
+  vertical-align: 0.0em;
+}
+.eqnH {
+  font-size: 100.0%;
+  vertical-align: 0.0em;
+}
+.eqnI {
+  font-size: 301.0%;
+  vertical-align: -0.1900263609528412em;
+}
+.eqnJ {
+  font-size: 100.0%;
+  vertical-align: 0.0em;
+}
