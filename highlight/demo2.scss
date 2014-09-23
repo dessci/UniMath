@@ -1,0 +1,78 @@
+﻿a {
+    text-decoration: none;
+}
+
+#wrapper {
+    max-width: 70em;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#main {
+    width: 100%;
+    float: left;
+}
+
+#sidebar {
+    width: 100%;
+    float: left;
+    ul {
+        padding: 0;
+        list-style-type: none;
+    }
+    li {
+        margin: 0.5em 0;
+    }
+}
+
+@media all and (min-width: 40em) {
+    #main {
+        width: 75%;
+    }
+    #sidebar {
+        width: 25%;
+    }
+}
+
+.mthi {
+     font-style: italic;
+}
+
+.unimath {
+    position: relative;
+    border: 0.2em solid transparent;
+    border-radius: 0.5em;
+    padding: 0.1em;
+    margin: -0.3em;
+    outline: none;
+    &.hover, &.focus {
+        border: 0.2em solid #afbfff;
+        cursor: pointer;
+    }
+    &.focus {
+        border: 0.2em solid #4f9fcf;
+    }
+    & > .actions {
+        display: none;
+    }
+    &.focus > .actions {
+        display: block;
+        position: absolute;
+        background-color: #fff;
+        right: 0.2em;
+        bottom: 0;
+    }
+    &.focus > .actions > span {
+        display: inline;
+        opacity: 0.2;
+    }
+    &.focus > .actions > span.on {
+        opacity: 1;
+    }
+}
+
+span.unimath {
+    &.focus > .actions {
+        right: -2.2em;
+    }
+}

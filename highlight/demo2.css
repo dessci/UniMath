@@ -1,0 +1,60 @@
+﻿a {
+  text-decoration: none; }
+
+#wrapper {
+  max-width: 70em;
+  margin-left: auto;
+  margin-right: auto; }
+
+#main {
+  width: 100%;
+  float: left; }
+
+#sidebar {
+  width: 100%;
+  float: left; }
+  #sidebar ul {
+    padding: 0;
+    list-style-type: none; }
+  #sidebar li {
+    margin: 0.5em 0; }
+
+@media all and (min-width: 40em) {
+  #main {
+    width: 75%; }
+  #sidebar {
+    width: 25%; } }
+
+.mthi {
+  font-style: italic; }
+
+.unimath {
+  position: relative;
+  border: 0.2em solid transparent;
+  border-radius: 0.5em;
+  padding: 0.1em;
+  margin: -0.3em;
+  outline: none; }
+  .unimath.hover, .unimath.focus {
+    border: 0.2em solid #afbfff;
+    cursor: pointer; }
+  .unimath.focus {
+    border: 0.2em solid #4f9fcf; }
+  .unimath > .actions {
+    display: none; }
+  .unimath.focus > .actions {
+    display: block;
+    position: absolute;
+    background-color: #fff;
+    right: 0.2em;
+    bottom: 0; }
+  .unimath.focus > .actions > span {
+    display: inline;
+    opacity: 0.2; }
+  .unimath.focus > .actions > span.on {
+    opacity: 1; }
+
+span.unimath.focus > .actions {
+  right: -2.2em; }
+
+/*# sourceMappingURL=demo2.css.map */
