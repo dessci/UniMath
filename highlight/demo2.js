@@ -21,34 +21,6 @@
         el.className = (' ' + el.className + ' ').replace(' ' + cls + ' ', ' ').trim();
     }
 
-    var curFocusElement = null;
-    var curHoverElement = null;
-
-    function updateFocus(newFocusElement, newHoverElement) {
-        var hasFocusClass = curFocusElement !== null ? curFocusElement : curHoverElement;
-        var hasHoverClass = curFocusElement !== null && curFocusElement !== curHoverElement ? curHoverElement : null;
-        var getFocusClass = newFocusElement !== null ? newFocusElement : newHoverElement;
-        var getHoverClass = newFocusElement !== null && newFocusElement !== newHoverElement ? newHoverElement : null;
-        if (hasFocusClass !== getFocusClass) {
-            if (hasFocusClass !== null) {
-                removeClass(hasFocusClass, 'focus');
-                hasFocusClass.blur();
-            }
-            if (getFocusClass !== null) {
-                addClass(getFocusClass, 'focus');
-                getFocusClass.focus();
-            }
-        }
-        if (hasHoverClass !== getHoverClass) {
-            if (hasHoverClass !== null)
-                removeClass(hasHoverClass, 'hover');
-            if (getHoverClass !== null)
-                addClass(getHoverClass, 'hover');
-        }
-        curFocusElement = newFocusElement;
-        curHoverElement = newHoverElement;
-    }
-
     function zoomAction() {
         alert('zoom');
     }
@@ -56,85 +28,160 @@
         alert('menu');
     }
 
-    function init() {
-        var nodelist = document.getElementsByClassName('unimath');
-        Array.prototype.forEach.call(nodelist, function (el, index) {
-            var activeAction = 0;
-            var zoomEl = elementWithClass('span', 'zoom fa fa-search-plus on');
-            var menuEl = elementWithClass('span', 'menu fa fa-external-link');
-
-            function currentActionElement() {
-                return activeAction === 0 ? zoomEl : menuEl;
+    var FocusManager = (function () {
+        function FocusManager() {
+            this.curFocusItem = null;
+            this.curHoverItem = null;
+        }
+        FocusManager.prototype.updateFocus = function (newFocusElement, newHoverElement) {
+            var hasFocusClass = this.curFocusItem !== null ? this.curFocusItem : this.curHoverItem;
+            var hasHoverClass = this.curFocusItem !== null && this.curFocusItem !== this.curHoverItem ? this.curHoverItem : null;
+            var getFocusClass = newFocusElement !== null ? newFocusElement : newHoverElement;
+            var getHoverClass = newFocusElement !== null && newFocusElement !== newHoverElement ? newHoverElement : null;
+            if (hasFocusClass !== getFocusClass) {
+                if (hasFocusClass !== null)
+                    hasFocusClass.lostFocus();
+                if (getFocusClass !== null)
+                    getFocusClass.gotFocus();
             }
-
-            function changeActiveAction(newAction) {
-                if (newAction !== activeAction) {
-                    removeClass(currentActionElement(), 'on');
-                    activeAction = newAction;
-                    addClass(currentActionElement(), 'on');
-                }
+            if (hasHoverClass !== getHoverClass) {
+                if (hasHoverClass !== null)
+                    hasHoverClass.lostHover();
+                if (getHoverClass !== null)
+                    getHoverClass.gotHover();
             }
+            this.curFocusItem = newFocusElement;
+            this.curHoverItem = newHoverElement;
+        };
 
-            function triggerActiveAction() {
-                updateFocus(null, null);
-                if (activeAction === 0) {
-                    zoomAction();
+        FocusManager.prototype.focusIn = function (el) {
+            this.updateFocus(el, this.curHoverItem);
+        };
+        FocusManager.prototype.focusOut = function () {
+            this.updateFocus(null, this.curHoverItem);
+        };
+        FocusManager.prototype.hoverIn = function (el) {
+            this.updateFocus(this.curFocusItem, el);
+        };
+        FocusManager.prototype.hoverOut = function () {
+            this.updateFocus(this.curFocusItem, null);
+        };
+        return FocusManager;
+    })();
+
+    var UniMathItem = (function () {
+        function UniMathItem(el, focusManager) {
+            var _this = this;
+            this.el = el;
+            this.focusManager = focusManager;
+            this.eatFocusClick = true;
+            this.clickHandler = function () {
+                if (_this.eatFocusClick) {
+                    _this.eatFocusClick = false;
                 } else {
-                    menuAction();
+                    _this.triggerActiveAction();
                 }
-            }
-
-            el.setAttribute('tabindex', '0');
-
-            el.addEventListener('focus', function () {
-                updateFocus(el, curHoverElement);
-            }, true);
-            el.addEventListener('blur', function () {
-                updateFocus(null, curHoverElement);
-            }, true);
-
-            el.addEventListener('mouseenter', function () {
-                updateFocus(curFocusElement, el);
-            }, false);
-            el.addEventListener('mouseleave', function () {
-                updateFocus(curFocusElement, null);
-            }, false);
-
-            el.addEventListener('keydown', function (ev) {
+            };
+            this.enterMenuHandler = function () {
+                _this.changeActiveAction(1);
+            };
+            this.leaveMenuHandler = function () {
+                _this.changeActiveAction(0);
+            };
+            this.keydownHandler = function (ev) {
                 switch (ev.keyCode) {
                     case 37:
                     case 39:
-                        changeActiveAction((activeAction + 1) % 2);
+                        _this.changeActiveAction((_this.activeAction + 1) % 2);
                         break;
                     case 90:
-                        activeAction = 0;
-                        triggerActiveAction();
+                        _this.changeActiveAction(0);
+                        _this.triggerActiveAction();
                         break;
                     case 77:
-                        activeAction = 1;
-                        triggerActiveAction();
+                        _this.changeActiveAction(1);
+                        _this.triggerActiveAction();
                         break;
                     case 13:
-                        triggerActiveAction();
+                        _this.triggerActiveAction();
                         break;
                 }
-            });
+            };
+            el.setAttribute('tabindex', '0');
+            el.addEventListener('focus', function (ev) {
+                focusManager.focusIn(_this);
+            }, false);
+            el.addEventListener('blur', function () {
+                focusManager.focusOut();
+            }, false);
+            el.addEventListener('mouseenter', function () {
+                _this.eatFocusClick = false;
+                focusManager.hoverIn(_this);
+            }, false);
+            el.addEventListener('mouseleave', function () {
+                _this.eatFocusClick = true;
+                focusManager.hoverOut();
+            }, false);
+        }
+        UniMathItem.prototype.triggerActiveAction = function () {
+            this.el.blur();
+            this.eatFocusClick = true;
+            var action = this.activeAction === 0 ? zoomAction : menuAction;
+            setTimeout(action, 0);
+        };
 
-            menuEl.addEventListener('mouseenter', function () {
-                changeActiveAction(1);
-            }, true);
-            menuEl.addEventListener('mouseleave', function () {
-                changeActiveAction(0);
-            }, true);
+        UniMathItem.prototype.changeActiveAction = function (newAction) {
+            if (newAction !== this.activeAction) {
+                removeClass(this.currentActionElement(), 'on');
+                this.activeAction = newAction;
+                addClass(this.currentActionElement(), 'on');
+            }
+        };
 
-            zoomEl.addEventListener('click', zoomAction, false);
-            menuEl.addEventListener('click', menuAction, false);
-            el.addEventListener('click', triggerActiveAction, false);
+        UniMathItem.prototype.currentActionElement = function () {
+            return this.activeAction === 0 ? this.zoomEl : this.menuEl;
+        };
 
-            var actionsEl = elementWithClass('div', 'actions');
-            actionsEl.appendChild(zoomEl);
-            actionsEl.appendChild(menuEl);
-            el.appendChild(actionsEl);
+        UniMathItem.prototype.gotFocus = function () {
+            this.zoomEl = elementWithClass('span', 'zoom fa fa-search-plus on');
+            this.menuEl = elementWithClass('span', 'menu fa fa-external-link');
+            this.actionsEl = elementWithClass('div', 'actions');
+            this.actionsEl.appendChild(this.zoomEl);
+            this.actionsEl.appendChild(this.menuEl);
+            this.el.appendChild(this.actionsEl);
+            this.activeAction = 0;
+            addClass(this.el, 'focus');
+            this.menuEl.addEventListener('mouseenter', this.enterMenuHandler, false);
+            this.menuEl.addEventListener('click', this.enterMenuHandler, false);
+            this.menuEl.addEventListener('mouseleave', this.leaveMenuHandler, false);
+            this.el.addEventListener('click', this.clickHandler, false);
+            this.el.addEventListener('keydown', this.keydownHandler, false);
+        };
+        UniMathItem.prototype.lostFocus = function () {
+            this.el.removeEventListener('keydown', this.keydownHandler, false);
+            this.el.removeEventListener('click', this.clickHandler, false);
+            this.menuEl.removeEventListener('mouseleave', this.leaveMenuHandler, false);
+            this.menuEl.removeEventListener('click', this.enterMenuHandler, false);
+            this.menuEl.removeEventListener('mouseenter', this.enterMenuHandler, false);
+            removeClass(this.el, 'focus');
+            this.el.removeChild(this.actionsEl);
+            this.actionsEl = this.zoomEl = this.menuEl = undefined;
+        };
+        UniMathItem.prototype.gotHover = function () {
+            addClass(this.el, 'hover');
+        };
+        UniMathItem.prototype.lostHover = function () {
+            removeClass(this.el, 'hover');
+        };
+        return UniMathItem;
+    })();
+
+    var focusManager = new FocusManager();
+
+    function init() {
+        var nodelist = document.getElementsByClassName('unimath');
+        Array.prototype.forEach.call(nodelist, function (el, index) {
+            new UniMathItem(el, focusManager);
         });
     }
     UniMath2.init = init;
