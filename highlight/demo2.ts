@@ -43,7 +43,8 @@
             var hasHoverClass: UniMathItem = this.curFocusItem !== null && this.curFocusItem !== this.curHoverItem
                 ? this.curHoverItem : null;
             var getFocusClass: UniMathItem = newFocusElement !== null ? newFocusElement : newHoverElement;
-            var getHoverClass: UniMathItem = newFocusElement !== null && newFocusElement !== newHoverElement ? newHoverElement : null;
+            var getHoverClass: UniMathItem = newFocusElement !== null && newFocusElement !== newHoverElement
+                ? newHoverElement : null;
             if (hasFocusClass !== getFocusClass) {
                 if (hasFocusClass !== null) hasFocusClass.lostFocus();
                 if (getFocusClass !== null) getFocusClass.gotFocus();
@@ -179,13 +180,23 @@
         }
     }
 
+    function showDashboard(ev: PointerEvent): void {
+        ev.preventDefault();
+        alert('Dashboard');
+    }
+
     var focusManager: IFocusManager = new FocusManager();
 
     export function init(): void {
         var nodelist: NodeList = document.getElementsByClassName('unimath');
-        Array.prototype.forEach.call(nodelist, (el: HTMLElement, index: number): void => {
+        Array.prototype.forEach.call(nodelist, (el: HTMLElement): void => {
             new UniMathItem(el, focusManager);
         });
+
+        var dashboardTrigger: HTMLElement = document.getElementById('unimath-dashboard-trigger');
+        if (dashboardTrigger) {
+            dashboardTrigger.addEventListener('click', showDashboard, false);
+        }
     }
 }
 

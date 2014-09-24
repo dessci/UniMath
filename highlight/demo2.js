@@ -176,13 +176,23 @@
         return UniMathItem;
     })();
 
+    function showDashboard(ev) {
+        ev.preventDefault();
+        alert('Dashboard');
+    }
+
     var focusManager = new FocusManager();
 
     function init() {
         var nodelist = document.getElementsByClassName('unimath');
-        Array.prototype.forEach.call(nodelist, function (el, index) {
+        Array.prototype.forEach.call(nodelist, function (el) {
             new UniMathItem(el, focusManager);
         });
+
+        var dashboardTrigger = document.getElementById('unimath-dashboard-trigger');
+        if (dashboardTrigger) {
+            dashboardTrigger.addEventListener('click', showDashboard, false);
+        }
     }
     UniMath2.init = init;
 })(UniMath2 || (UniMath2 = {}));

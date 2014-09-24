@@ -41,20 +41,22 @@
   .unimath.focus {
     border: 0.2em solid #4f9fcf; }
   .unimath > .actions {
-    display: none; }
-  .unimath.focus > .actions {
     display: block;
     position: absolute;
     background-color: #fff;
-    right: 0.2em;
-    bottom: 0; }
-  .unimath.focus > .actions > span {
-    display: inline;
-    opacity: 0.2; }
-  .unimath.focus > .actions > span.on {
-    opacity: 1; }
+    width: 2.1em; }
+    .unimath > .actions > span {
+      display: inline;
+      opacity: 0.4; }
+    .unimath > .actions > span.on {
+      opacity: 1; }
 
-span.unimath.focus > .actions {
-  right: -2.2em; }
+div.unimath > .actions {
+  right: 0.2em;
+  bottom: 0; }
+
+span.unimath > .actions {
+  left: 0.2em;
+  top: -1.3em; }
 
 /*# sourceMappingURL=demo2.css.map */
