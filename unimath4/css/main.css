@@ -1,0 +1,36 @@
+﻿body, html {
+  margin: 0;
+  padding: 0; }
+
+a {
+  text-decoration: none; }
+
+#wrapper {
+  max-width: 50em;
+  margin-left: auto;
+  margin-right: auto; }
+
+#main {
+  padding: 0.5em;
+  box-sizing: border-box;
+  width: 100%;
+  float: left; }
+
+#sidebar {
+  padding: 0.5em;
+  box-sizing: border-box;
+  width: 100%;
+  float: left; }
+  #sidebar ul {
+    padding: 0;
+    list-style-type: none; }
+  #sidebar li {
+    margin: 0.5em 0; }
+
+@media all and (min-width: 30em) {
+  #main {
+    width: 75%; }
+  #sidebar {
+    width: 25%; } }
+
+/*# sourceMappingURL=main.css.map */

@@ -1,0 +1,32 @@
+﻿.unimath {
+  position: relative;
+  border: 0.2em solid transparent;
+  border-radius: 0.5em;
+  padding: 0.1em;
+  margin: -0.3em;
+  outline: none; }
+  .unimath.hover, .unimath.focus {
+    border: 0.2em solid #afbfff;
+    cursor: pointer; }
+  .unimath.focus {
+    border: 0.2em solid #4f9fcf; }
+  .unimath > .actions {
+    display: block;
+    position: absolute;
+    background-color: #fff;
+    width: 2.1em; }
+    .unimath > .actions > span {
+      display: inline;
+      opacity: 0.4; }
+    .unimath > .actions > span.on {
+      opacity: 1; }
+
+div.unimath > .actions {
+  right: 0.2em;
+  bottom: 0; }
+
+span.unimath > .actions {
+  left: 0.2em;
+  top: -1.3em; }
+
+/*# sourceMappingURL=unimath.css.map */
