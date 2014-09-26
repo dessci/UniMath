@@ -16,14 +16,15 @@
         display: block;
         position: absolute;
         background-color: #fff;
-        width: 2.1em;
+        //width: 2.1em;
+        width: 1em;
         & > span {
             display: inline;
-            opacity: 0.4;
+            //opacity: 0.4;
         }
-        & > span.on {
+        /*& > span.on {
             opacity: 1;
-        }
+        }*/
     }
 }
 
@@ -33,8 +34,10 @@ div.unimath > .actions {
 }
 
 span.unimath > .actions {
-    left: 0.2em;
-    top: -1.3em;
+    /*left: 0.2em;
+    top: -1.3em;*/
+    left: -1.2em;
+    top: 0.2em;
 }
 
 .unimath-dialog {
@@ -47,8 +50,8 @@ span.unimath > .actions {
     height: -webkit-fit-content;
     height: -moz-fit-content;
     height: fit-content;
-    //min-width: 20em;
     max-width: 99%;
+    max-width: calc(100% - 6px);
     margin: auto;
     border: 3px solid black;
     border-radius: 0.4em;
@@ -59,7 +62,7 @@ span.unimath > .actions {
         position: relative;
         background-color: #d9edf7;
         margin: 0;
-        padding: 0.2em;
+        padding: 0.2em 1.2em 0.2em 0.2em;
         border-top-left-radius: 0.4em;
         border-top-right-radius: 0.4em;
         font-weight: bold;
@@ -76,13 +79,35 @@ span.unimath > .actions {
         margin: 0;
         padding: 0.2em;
         overflow: hidden;
+        & > .menu {
+            margin-top: 0.5em;
+            & > button {
+                display: inline-block;
+                width: 50%;
+                background-color: transparent;
+                color: #000;
+                -webkit-box-sizing: border-box;
+                -moz-box-sizing: border-box;
+                box-sizing: border-box;
+                border: none; //1px solid #000;
+                border-radius: 0.4em;
+                padding: 0.2em;
+                margin: 0;
+                font-size: 100%;
+                text-align: left;
+                &:hover {
+                    background-color: #ddd;
+                }
+                & > i {
+                    font-size: 125%;
+                }
+            }
+        }
     }
 }
 
-/*@media all and (max-width: 20em) {
-    .unimath-dialog {
+@media all and (max-width: 25em) {
+    .unimath-dialog > .body > .menu > button {
         width: 100%;
-        height: 100%;
-        border: none;
     }
-}*/
+}

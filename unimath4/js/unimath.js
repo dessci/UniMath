@@ -93,9 +93,7 @@ var UniMath;
         el.className = (' ' + el.className + ' ').replace(' ' + cls + ' ', ' ').trim();
     }
 
-    function menuAction() {
-        alert('menu');
-    }
+    
 
     var FocusManager = (function () {
         function FocusManager() {
@@ -138,7 +136,33 @@ var UniMath;
         return FocusManager;
     })();
 
+    function viewSourceAction(item) {
+        alert('View source');
+    }
+
+    function shareAction(item) {
+        alert('Share');
+    }
+
+    function searchAction(item) {
+        alert('Search');
+    }
+
+    function dashboardAction() {
+        alert('Dashboard');
+    }
+
+    var menuItems = [
+        { html: '<i class="fa fa-file-text"></i> View MathML Source', callback: viewSourceAction },
+        { html: '<i class="fa fa-share-alt"></i> Share', callback: shareAction },
+        { html: '<i class="fa fa-search"></i> Search', callback: searchAction },
+        { html: '<i class="fa fa-dashboard"></i> Page Dashboard', callback: dashboardAction }
+    ];
+
     var UniMathItem = (function () {
+        /*private currentActionElement(): HTMLElement {
+        return this.activeAction === 0 ? this.zoomEl : this.menuEl;
+        }*/
         function UniMathItem(el, eqnNumber, focusManager) {
             var _this = this;
             this.el = el;
@@ -152,26 +176,23 @@ var UniMath;
                     _this.triggerActiveAction();
                 }
             };
-            this.enterMenuHandler = function () {
-                _this.changeActiveAction(1);
+            /*private changeActiveAction(newAction: number): void {
+            if (newAction !== this.activeAction) {
+            removeClass(this.currentActionElement(), 'on');
+            this.activeAction = newAction;
+            addClass(this.currentActionElement(), 'on');
+            }
+            }
+            
+            private enterMenuHandler: () => void = (): void => {
+            this.changeActiveAction(1);
             };
-            this.leaveMenuHandler = function () {
-                _this.changeActiveAction(0);
-            };
+            
+            private leaveMenuHandler: () => void = (): void => {
+            this.changeActiveAction(0);
+            };*/
             this.keydownHandler = function (ev) {
                 switch (ev.keyCode) {
-                    case 37:
-                    case 39:
-                        _this.changeActiveAction((_this.activeAction + 1) % 2);
-                        break;
-                    case 90:
-                        _this.changeActiveAction(0);
-                        _this.triggerActiveAction();
-                        break;
-                    case 77:
-                        _this.changeActiveAction(1);
-                        _this.triggerActiveAction();
-                        break;
                     case 13:
                         _this.triggerActiveAction();
                         break;
@@ -194,6 +215,7 @@ var UniMath;
             }, false);
         }
         UniMathItem.prototype.zoomAction = function () {
+            var _this = this;
             var dialog = createDialogElement('Equation ' + this.eqnNumber);
             var body = elementWithClass('div', 'body');
             dialog.appendChild(body);
@@ -202,55 +224,72 @@ var UniMath;
             if (!backend.equationZoom(body, this.el, 2))
                 body.appendChild(document.createTextNode('Error'));
 
+            var menuContainer = elementWithClass('div', 'menu');
+            menuItems.forEach(function (item) {
+                item.button = document.createElement('button');
+                item.button.innerHTML = item.html;
+                item.clickHandler = function (ev) {
+                    ev.stopPropagation();
+                    dialog.close();
+                    item.callback(_this);
+                };
+                item.button.addEventListener('click', item.clickHandler, false);
+                menuContainer.appendChild(item.button);
+            });
+            body.appendChild(menuContainer);
+
+            function closer() {
+                console.log('closing');
+                dialog.removeEventListener('close', closer, false);
+                menuItems.forEach(function (item) {
+                    item.button.removeEventListener('click', item.clickHandler, false);
+                });
+            }
+
+            dialog.addEventListener('close', closer, false);
             dialog.showModal();
         };
 
         UniMathItem.prototype.triggerActiveAction = function () {
             this.el.blur();
             this.eatFocusClick = true;
-            if (this.activeAction === 0) {
-                this.zoomAction();
-            } else {
-                menuAction();
-            }
-        };
 
-        UniMathItem.prototype.changeActiveAction = function (newAction) {
-            if (newAction !== this.activeAction) {
-                removeClass(this.currentActionElement(), 'on');
-                this.activeAction = newAction;
-                addClass(this.currentActionElement(), 'on');
-            }
-        };
-
-        UniMathItem.prototype.currentActionElement = function () {
-            return this.activeAction === 0 ? this.zoomEl : this.menuEl;
+            //if (this.activeAction === 0) {
+            this.zoomAction();
+            /*} else {
+            menuAction();
+            }*/
         };
 
         UniMathItem.prototype.gotFocus = function () {
-            this.zoomEl = elementWithClass('span', 'zoom fa fa-search-plus on');
-            this.menuEl = elementWithClass('span', 'menu fa fa-external-link');
+            //this.zoomEl = elementWithClass('span', 'zoom fa fa-search-plus on');
+            this.zoomEl = elementWithClass('span', 'zoom fa fa-superscript');
+
+            //this.menuEl = elementWithClass('span', 'menu fa fa-external-link');
             this.actionsEl = elementWithClass('div', 'actions');
             this.actionsEl.appendChild(this.zoomEl);
-            this.actionsEl.appendChild(this.menuEl);
+
+            //this.actionsEl.appendChild(this.menuEl);
             this.el.appendChild(this.actionsEl);
             this.activeAction = 0;
             addClass(this.el, 'focus');
-            this.menuEl.addEventListener('mouseenter', this.enterMenuHandler, false);
+
+            /*this.menuEl.addEventListener('mouseenter', this.enterMenuHandler, false);
             this.menuEl.addEventListener('click', this.enterMenuHandler, false);
-            this.menuEl.addEventListener('mouseleave', this.leaveMenuHandler, false);
+            this.menuEl.addEventListener('mouseleave', this.leaveMenuHandler, false);*/
             this.el.addEventListener('click', this.clickHandler, false);
             this.el.addEventListener('keydown', this.keydownHandler, false);
         };
         UniMathItem.prototype.lostFocus = function () {
             this.el.removeEventListener('keydown', this.keydownHandler, false);
             this.el.removeEventListener('click', this.clickHandler, false);
-            this.menuEl.removeEventListener('mouseleave', this.leaveMenuHandler, false);
+
+            /*this.menuEl.removeEventListener('mouseleave', this.leaveMenuHandler, false);
             this.menuEl.removeEventListener('click', this.enterMenuHandler, false);
-            this.menuEl.removeEventListener('mouseenter', this.enterMenuHandler, false);
+            this.menuEl.removeEventListener('mouseenter', this.enterMenuHandler, false);*/
             removeClass(this.el, 'focus');
             this.el.removeChild(this.actionsEl);
-            this.actionsEl = this.zoomEl = this.menuEl = undefined;
+            this.actionsEl = this.zoomEl = undefined;
         };
         UniMathItem.prototype.gotHover = function () {
             addClass(this.el, 'hover');
@@ -260,11 +299,6 @@ var UniMath;
         };
         return UniMathItem;
     })();
-
-    function showDashboard(ev) {
-        ev.preventDefault();
-        alert('Dashboard');
-    }
 
     var focusManager = new FocusManager();
 
@@ -282,7 +316,10 @@ var UniMath;
 
         var dashboardTrigger = document.getElementById('unimath-dashboard-trigger');
         if (dashboardTrigger) {
-            dashboardTrigger.addEventListener('click', showDashboard, false);
+            dashboardTrigger.addEventListener('click', function (ev) {
+                ev.preventDefault();
+                dashboardAction();
+            }, false);
         }
 
         checkDialogSupport();

@@ -13,18 +13,16 @@ a {
     margin-right: auto;
 }
 
-#main {
+#main, #sidebar {
     padding: 0.5em;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
     box-sizing: border-box;
     width: 100%;
     float: left;
 }
 
 #sidebar {
-    padding: 0.5em;
-    box-sizing: border-box;
-    width: 100%;
-    float: left;
     ul {
         padding: 0;
         list-style-type: none;
