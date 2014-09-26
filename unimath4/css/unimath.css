@@ -29,4 +29,47 @@ span.unimath > .actions {
   left: 0.2em;
   top: -1.3em; }
 
+.unimath-dialog {
+  position: absolute;
+  left: 0;
+  right: 0;
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+  height: -webkit-fit-content;
+  height: -moz-fit-content;
+  height: fit-content;
+  max-width: 99%;
+  margin: auto;
+  border: 3px solid black;
+  border-radius: 0.4em;
+  padding: 0;
+  background: white;
+  color: black; }
+  .unimath-dialog > .header {
+    position: relative;
+    background-color: #d9edf7;
+    margin: 0;
+    padding: 0.2em;
+    border-top-left-radius: 0.4em;
+    border-top-right-radius: 0.4em;
+    font-weight: bold; }
+    .unimath-dialog > .header > i {
+      position: absolute;
+      right: 0.2em; }
+      .unimath-dialog > .header > i:hover {
+        color: #666;
+        cursor: pointer; }
+  .unimath-dialog > .body {
+    margin: 0;
+    padding: 0.2em;
+    overflow: hidden; }
+
+/*@media all and (max-width: 20em) {
+    .unimath-dialog {
+        width: 100%;
+        height: 100%;
+        border: none;
+    }
+}*/
 /*# sourceMappingURL=unimath.css.map */

@@ -1,17 +1,20 @@
-﻿var UniMath;
+﻿
+var UniMath;
 (function (UniMath) {
     'use strict';
+
+    var backend = new UniMath.MathJaxBackend();
 
     function loadDialogPolyfill(onLoad) {
         var head = document.getElementsByTagName('head')[0];
         var link = document.createElement('link');
         link.rel = 'stylesheet';
         link.type = 'text/css';
-        link.href = 'dialog-polyfill.css';
+        link.href = 'css/dialog-polyfill.css';
         head.insertBefore(link, head.firstChild);
         var script = document.createElement('script');
         script.type = 'text/javascript';
-        script.src = 'dialog-polyfill.js';
+        script.src = 'js/dialog-polyfill.js';
         script.onload = onLoad;
         head.appendChild(script);
     }
@@ -25,10 +28,25 @@
         }
     }
 
-    function createDialogElement() {
-        var dialog = document.createElement('dialog');
+    function createDialogElement(title) {
+        var dialog = elementWithClass('dialog', 'unimath-dialog');
         if ('dialogPolyfill' in window)
             dialogPolyfill.registerDialog(dialog);
+        var header = elementWithClass('div', 'header');
+        header.appendChild(document.createTextNode(title));
+        var closer = elementWithClass('i', 'fa fa-times');
+        function closeClick(ev) {
+            ev.stopPropagation();
+            dialog.close();
+        }
+        function onClose() {
+            closer.removeEventListener('click', closeClick, false);
+            dialog.removeEventListener('close', onClose, false);
+        }
+        header.appendChild(closer);
+        dialog.appendChild(header);
+        closer.addEventListener('click', closeClick, false);
+        dialog.addEventListener('close', onClose, false);
         return dialog;
     }
 
@@ -49,20 +67,6 @@
 
     function removeClass(el, cls) {
         el.className = (' ' + el.className + ' ').replace(' ' + cls + ' ', ' ').trim();
-    }
-
-    /*<dialog id = "unimath-zoom" >
-    <div class="eqn" >< / div >
-    <div style = "font-size:50%; margin: 0.4em" > To do: Panning or scroll bars for overflowing equations </div >
-    <button>Close </button >
-    </dialog >*/
-    function zoomAction() {
-        var dialog = createDialogElement();
-        var eqnDiv = document.createElement('div');
-        eqnDiv.appendChild(document.createTextNode('Zoooom'));
-        dialog.appendChild(eqnDiv);
-        document.body.appendChild(dialog);
-        dialog.showModal();
     }
 
     function menuAction() {
@@ -111,9 +115,10 @@
     })();
 
     var UniMathItem = (function () {
-        function UniMathItem(el, focusManager) {
+        function UniMathItem(el, eqnNumber, focusManager) {
             var _this = this;
             this.el = el;
+            this.eqnNumber = eqnNumber;
             this.focusManager = focusManager;
             this.eatFocusClick = true;
             this.clickHandler = function () {
@@ -164,11 +169,26 @@
                 focusManager.hoverOut();
             }, false);
         }
+        UniMathItem.prototype.zoomAction = function () {
+            var dialog = createDialogElement('Equation ' + this.eqnNumber);
+            var body = elementWithClass('div', 'body');
+            dialog.appendChild(body);
+            document.body.appendChild(dialog);
+
+            if (!backend.equationZoom(body, this.el, 2))
+                body.appendChild(document.createTextNode('Error'));
+
+            dialog.showModal();
+        };
+
         UniMathItem.prototype.triggerActiveAction = function () {
             this.el.blur();
             this.eatFocusClick = true;
-            var action = this.activeAction === 0 ? zoomAction : menuAction;
-            setTimeout(action, 0);
+            if (this.activeAction === 0) {
+                this.zoomAction();
+            } else {
+                menuAction();
+            }
         };
 
         UniMathItem.prototype.changeActiveAction = function (newAction) {
@@ -225,14 +245,15 @@
     var focusManager = new FocusManager();
 
     function init() {
-        var blockCount = 0, inlineCount = 0;
+        var totalCount = 0, blockCount = 0, inlineCount = 0;
         var nodelist = document.getElementsByClassName('unimath');
         Array.prototype.forEach.call(nodelist, function (el) {
+            totalCount++;
             if (el.localName === 'div')
                 blockCount++;
             else
                 inlineCount++;
-            new UniMathItem(el, focusManager);
+            new UniMathItem(el, totalCount, focusManager);
         });
 
         var dashboardTrigger = document.getElementById('unimath-dashboard-trigger');
@@ -240,10 +261,11 @@
             dashboardTrigger.addEventListener('click', showDashboard, false);
         }
 
+        checkDialogSupport();
+
         console.log('Initialized UniMath: ' + (inlineCount + blockCount) + ' (' + inlineCount + ' inline, ' + blockCount + ' block)');
     }
     UniMath.init = init;
 })(UniMath || (UniMath = {}));
 
 UniMath.init();
-//# sourceMappingURL=unimath.js.map
