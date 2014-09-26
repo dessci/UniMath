@@ -1,4 +1,28 @@
-﻿
+﻿/// <reference path="unimath-backend.ts" />
+var UniMath;
+(function (UniMath) {
+    var MathJaxBackend = (function () {
+        function MathJaxBackend() {
+        }
+        MathJaxBackend.prototype.equationZoom = function (parent, el, factor) {
+            var script = el.querySelector('script[type="math/mml"]');
+            if (!script)
+                return false;
+            script = script.cloneNode(true);
+            script.removeAttribute('id');
+            var wrap = document.createElement('div');
+            wrap.style.fontSize = (100 * factor) + '%';
+            wrap.appendChild(script);
+            parent.appendChild(wrap);
+            MathJax.Hub.Queue(['Typeset', MathJax.Hub, script]);
+            return true;
+        };
+        return MathJaxBackend;
+    })();
+    UniMath.MathJaxBackend = MathJaxBackend;
+})(UniMath || (UniMath = {}));
+/// <reference path="unimath-mathjax.ts" />
+
 var UniMath;
 (function (UniMath) {
     'use strict';
@@ -269,3 +293,4 @@ var UniMath;
 })(UniMath || (UniMath = {}));
 
 UniMath.init();
+//# sourceMappingURL=unimath.js.map
