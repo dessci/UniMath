@@ -1,6 +1,9 @@
 ﻿/// <reference path="unimath-backend.ts" />
+
 var UniMath;
 (function (UniMath) {
+    'use strict';
+
     var MathJaxBackend = (function () {
         function MathJaxBackend() {
         }
@@ -148,8 +151,61 @@ var UniMath;
         alert('Search');
     }
 
+    var highlightAll = false;
+
+    function highlightAllAction() {
+        highlightAll = !highlightAll;
+        var nodelist = document.getElementsByClassName('unimath');
+        Array.prototype.forEach.call(nodelist, function (el) {
+            if (highlightAll) {
+                addClass(el, 'hover');
+            } else {
+                removeClass(el, 'hover');
+            }
+        });
+    }
+
+    function noopAction() {
+        alert('Not implemented');
+    }
+
+    var dashboardItems = [
+        { html: '<i class="fa fa-lightbulb-o"></i> Highlight All Equations', callback: highlightAllAction },
+        { html: '<i class="fa fa-question"></i> Action 2', callback: noopAction },
+        { html: '<i class="fa fa-question"></i> Action 3', callback: noopAction },
+        { html: '<i class="fa fa-question"></i> Action 4', callback: noopAction }
+    ];
+
     function dashboardAction() {
-        alert('Dashboard');
+        var _this = this;
+        var dialog = createDialogElement('Universal Math Dashboard');
+        var body = elementWithClass('div', 'body');
+        dialog.appendChild(body);
+        document.body.appendChild(dialog);
+
+        var menuContainer = elementWithClass('div', 'dashboard');
+        dashboardItems.forEach(function (item) {
+            item.button = document.createElement('button');
+            item.button.innerHTML = item.html;
+            item.clickHandler = function (ev) {
+                ev.stopPropagation();
+                dialog.close();
+                item.callback(_this);
+            };
+            item.button.addEventListener('click', item.clickHandler, false);
+            menuContainer.appendChild(item.button);
+        });
+        body.appendChild(menuContainer);
+
+        function closer() {
+            dialog.removeEventListener('close', closer, false);
+            dashboardItems.forEach(function (item) {
+                item.button.removeEventListener('click', item.clickHandler, false);
+            });
+        }
+
+        dialog.addEventListener('close', closer, false);
+        dialog.showModal();
     }
 
     var menuItems = [
@@ -239,7 +295,6 @@ var UniMath;
             body.appendChild(menuContainer);
 
             function closer() {
-                console.log('closing');
                 dialog.removeEventListener('close', closer, false);
                 menuItems.forEach(function (item) {
                     item.button.removeEventListener('click', item.clickHandler, false);
@@ -307,10 +362,11 @@ var UniMath;
         var nodelist = document.getElementsByClassName('unimath');
         Array.prototype.forEach.call(nodelist, function (el) {
             totalCount++;
-            if (el.localName === 'div')
+            if (el.localName === 'div') {
                 blockCount++;
-            else
+            } else {
                 inlineCount++;
+            }
             new UniMathItem(el, totalCount, focusManager);
         });
 
@@ -330,4 +386,30 @@ var UniMath;
 })(UniMath || (UniMath = {}));
 
 UniMath.init();
+/// <reference path="unimath-backend.ts" />
+
+var UniMath;
+(function (UniMath) {
+    'use strict';
+
+    var MathMLBackend = (function () {
+        function MathMLBackend() {
+        }
+        MathMLBackend.prototype.equationZoom = function (parent, el, factor) {
+            var mathNodes = el.getElementsByTagName('math');
+            if (mathNodes.length !== 1)
+                return false;
+            var mml = mathNodes[0];
+            mml = mml.cloneNode(true);
+            mml.removeAttribute('id');
+            var wrap = document.createElement('div');
+            wrap.style.fontSize = (100 * factor) + '%';
+            wrap.appendChild(mml);
+            parent.appendChild(wrap);
+            return true;
+        };
+        return MathMLBackend;
+    })();
+    UniMath.MathMLBackend = MathMLBackend;
+})(UniMath || (UniMath = {}));
 //# sourceMappingURL=unimath.js.map

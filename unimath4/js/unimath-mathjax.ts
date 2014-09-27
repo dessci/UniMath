@@ -1,4 +1,6 @@
-﻿interface IMathJaxHub {
+﻿/// <reference path="unimath-backend.ts" />
+
+interface IMathJaxHub {
     Queue(item: any[]): void;
 }
 interface IMathJax {
@@ -6,8 +8,8 @@ interface IMathJax {
 }
 declare var MathJax: any;
 
-/// <reference path="unimath-backend.ts" />
 module UniMath {
+    'use strict';
 
     export class MathJaxBackend implements Backend {
         equationZoom(parent: HTMLElement, el: HTMLElement, factor: number): boolean {
