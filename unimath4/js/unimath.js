@@ -1,4 +1,8 @@
-﻿/// <reference path="unimath-backend.ts" />
+﻿var UniMath;
+(function (UniMath) {
+    'use strict';
+})(UniMath || (UniMath = {}));
+/// <reference path="unimath-backend.ts" />
 
 var UniMath;
 (function (UniMath) {
@@ -20,11 +24,101 @@ var UniMath;
             MathJax.Hub.Queue(['Typeset', MathJax.Hub, script]);
             return true;
         };
+        MathJaxBackend.prototype.getSource = function (el) {
+            var script = el.querySelector('script[type="math/mml"]');
+            if (!script)
+                return 'Unable to get source';
+            return script.innerHTML;
+        };
         return MathJaxBackend;
     })();
     UniMath.MathJaxBackend = MathJaxBackend;
 })(UniMath || (UniMath = {}));
+var UniMath;
+(function (UniMath) {
+    'use strict';
+
+    function trimFront(s) {
+        return s.replace(/^\s+/, '');
+    }
+
+    function trimBack(s) {
+        return s.replace(/\s+$/, '');
+    }
+
+    function isTokenElement(node) {
+        return node.localName.match(/^(mi|mn|mo|mtext|mspace|ms)$/) !== null;
+    }
+
+    function normalizeMathMLRecurse(node) {
+        // http://www.w3.org/TR/REC-MathML/chap3_2.html
+        // http://www.w3.org/TR/MathML2/chapter2.html#fund.collapse
+        if (isTokenElement(node)) {
+            // may contain <malignmark/> child elements
+            var toRemove = [];
+            Array.prototype.forEach.call(node.childNodes, function (n, i) {
+                if (n.nodeType === 3) {
+                    var s = n.textContent.replace(/\s\s+/g, ' ');
+                    if (i === 0)
+                        s = trimFront(s);
+                    if (i === node.childNodes.length - 1)
+                        s = trimBack(s);
+                    if (s.length === 0) {
+                        toRemove.push(n);
+                    } else {
+                        n.textContent = s;
+                    }
+                }
+            });
+            toRemove.forEach(function (n) {
+                node.removeChild(n);
+            });
+        } else {
+            Array.prototype.filter.call(node.childNodes, function (n) {
+                return n.nodeType === 3;
+            }).forEach(function (n) {
+                node.removeChild(n);
+            });
+            Array.prototype.forEach.call(node.childNodes, function (n) {
+                normalizeMathMLRecurse(n);
+            });
+        }
+    }
+
+    function normalizeMathML(node) {
+        // http://www.w3.org/TR/MathML2/chapter2.html#fund.collapse
+        node.normalize();
+        normalizeMathMLRecurse(node);
+    }
+
+    function prettifyMathML(st) {
+        var serializer = new XMLSerializer();
+        var parser = new DOMParser();
+        var doc = parser.parseFromString(st, 'application/xml');
+
+        function out(node, indent) {
+            if (isTokenElement(node)) {
+                return indent + serializer.serializeToString(node);
+            } else {
+                var newindent = indent + '  ';
+                var childItems = Array.prototype.map.call(node.childNodes, function (n) {
+                    return out(n, newindent);
+                });
+                var innerText = '\n' + childItems.join('\n') + '\n' + indent;
+                var outerNode = node.cloneNode(false);
+                outerNode.textContent = '&';
+                return indent + serializer.serializeToString(outerNode).replace('&amp;', innerText);
+            }
+        }
+
+        normalizeMathML(doc.documentElement);
+
+        return out(doc.documentElement, '');
+    }
+    UniMath.prettifyMathML = prettifyMathML;
+})(UniMath || (UniMath = {}));
 /// <reference path="unimath-mathjax.ts" />
+/// <reference path="unimath-xml.ts" />
 
 var UniMath;
 (function (UniMath) {
@@ -139,10 +233,6 @@ var UniMath;
         return FocusManager;
     })();
 
-    function viewSourceAction(item) {
-        alert('View source');
-    }
-
     function shareAction(item) {
         alert('Share');
     }
@@ -152,7 +242,6 @@ var UniMath;
     }
 
     var highlightAll = false;
-
     function highlightAllAction() {
         highlightAll = !highlightAll;
         var nodelist = document.getElementsByClassName('unimath');
@@ -209,7 +298,12 @@ var UniMath;
     }
 
     var menuItems = [
-        { html: '<i class="fa fa-file-text"></i> View MathML Source', callback: viewSourceAction },
+        {
+            html: '<i class="fa fa-file-text"></i> View MathML Source',
+            callback: function (item) {
+                return item.viewSourceAction();
+            }
+        },
         { html: '<i class="fa fa-share-alt"></i> Share', callback: shareAction },
         { html: '<i class="fa fa-search"></i> Search', callback: searchAction },
         { html: '<i class="fa fa-dashboard"></i> Page Dashboard', callback: dashboardAction }
@@ -270,6 +364,20 @@ var UniMath;
                 focusManager.hoverOut();
             }, false);
         }
+        UniMathItem.prototype.viewSourceAction = function () {
+            var dialog = createDialogElement('MathML Source for Equation ' + this.eqnNumber);
+            var body = elementWithClass('div', 'body');
+            var text = document.createElement('textarea');
+            var src = backend.getSource(this.el);
+            src = UniMath.prettifyMathML(src);
+            text.value = src;
+            text.disabled = true;
+            body.appendChild(text);
+            dialog.appendChild(body);
+            document.body.appendChild(dialog);
+            dialog.showModal();
+        };
+
         UniMathItem.prototype.zoomAction = function () {
             var _this = this;
             var dialog = createDialogElement('Equation ' + this.eqnNumber);
@@ -381,6 +489,11 @@ var UniMath;
         checkDialogSupport();
 
         console.log('Initialized UniMath: ' + (inlineCount + blockCount) + ' (' + inlineCount + ' inline, ' + blockCount + ' block)');
+        /*var src = '<math><mi>    <malignmark/>  <malignmark/> regre   </mi></math>';
+        //var src = '<math>x</math>';
+        console.log(src);
+        src = UniMath.prettifyMathML(src);
+        console.log(src);*/
     }
     UniMath.init = init;
 })(UniMath || (UniMath = {}));
@@ -407,6 +520,13 @@ var UniMath;
             wrap.appendChild(mml);
             parent.appendChild(wrap);
             return true;
+        };
+        MathMLBackend.prototype.getSource = function (el) {
+            var mathNodes = el.getElementsByTagName('math');
+            if (mathNodes.length !== 1)
+                return 'Unable to get source';
+            var mml = mathNodes[0];
+            return mml.outerHTML;
         };
         return MathMLBackend;
     })();

@@ -1,4 +1,5 @@
 ﻿/// <reference path="unimath-mathjax.ts" />
+/// <reference path="unimath-xml.ts" />
 
 interface HTMLDialogElement extends HTMLElement {
     showModal(): void;
@@ -133,10 +134,6 @@ module UniMath {
         }
     }
 
-    function viewSourceAction(item: UniMathItem): void {
-        alert('View source');
-    }
-
     function shareAction(item: UniMathItem): void {
         alert('Share');
     }
@@ -146,7 +143,6 @@ module UniMath {
     }
 
     var highlightAll: boolean = false;
-
     function highlightAllAction(): void {
         highlightAll = !highlightAll;
         var nodelist: NodeList = document.getElementsByClassName('unimath');
@@ -209,7 +205,10 @@ module UniMath {
     }
 
     var menuItems: MenuItemData[] = [
-        { html: '<i class="fa fa-file-text"></i> View MathML Source', callback: viewSourceAction },
+        {
+            html: '<i class="fa fa-file-text"></i> View MathML Source',
+            callback: (item: UniMathItem): void => item.viewSourceAction()
+        },
         { html: '<i class="fa fa-share-alt"></i> Share', callback: shareAction },
         { html: '<i class="fa fa-search"></i> Search', callback: searchAction },
         { html: '<i class="fa fa-dashboard"></i> Page Dashboard', callback: dashboardAction }
@@ -221,6 +220,20 @@ module UniMath {
         private actionsEl: HTMLElement;
         private activeAction: number;
         private eatFocusClick: boolean = true;
+
+        public viewSourceAction(): void {
+            var dialog: HTMLDialogElement = createDialogElement('MathML Source for Equation ' + this.eqnNumber);
+            var body: HTMLElement = elementWithClass('div', 'body');
+            var text: HTMLTextAreaElement = document.createElement('textarea');
+            var src: string = backend.getSource(this.el);
+            src = UniMath.prettifyMathML(src);
+            text.value = src;
+            text.disabled = true;
+            body.appendChild(text);
+            dialog.appendChild(body);
+            document.body.appendChild(dialog);
+            dialog.showModal();
+        }
 
         private zoomAction(): void {
             var dialog: HTMLDialogElement = createDialogElement('Equation ' + this.eqnNumber);
@@ -389,6 +402,12 @@ module UniMath {
 
         console.log('Initialized UniMath: ' + (inlineCount + blockCount)
             + ' (' + inlineCount + ' inline, ' + blockCount + ' block)');
+
+        /*var src = '<math><mi>    <malignmark/>  <malignmark/> regre   </mi></math>';
+        //var src = '<math>x</math>';
+        console.log(src);
+        src = UniMath.prettifyMathML(src);
+        console.log(src);*/
     }
 }
 

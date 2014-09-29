@@ -112,6 +112,13 @@ span.unimath > .actions {
                 display: inline-block;
             }
         }
+        & > textarea {
+            width: 60em;
+            height: 40em;
+            max-width: 90vw;
+            max-height: 80vh;
+            background-color: transparent;
+        }
     }
 }
 

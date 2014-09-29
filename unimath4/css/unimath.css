@@ -94,6 +94,12 @@ span.unimath > .actions {
       margin-top: 0.5em; }
       .unimath-dialog > .body > .menu > button {
         display: inline-block; }
+    .unimath-dialog > .body > textarea {
+      width: 60em;
+      height: 40em;
+      max-width: 90vw;
+      max-height: 80vh;
+      background-color: transparent; }
 
 @media all and (min-width: 25em) {
   .unimath-dialog > .body > .menu > button {

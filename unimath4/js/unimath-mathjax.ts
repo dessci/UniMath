@@ -14,7 +14,8 @@ module UniMath {
     export class MathJaxBackend implements Backend {
         equationZoom(parent: HTMLElement, el: HTMLElement, factor: number): boolean {
             var script: HTMLScriptElement = <HTMLScriptElement> el.querySelector('script[type="math/mml"]');
-            if (!script) return false;
+            if (!script)
+                return false;
             script = <HTMLScriptElement> script.cloneNode(true);
             script.removeAttribute('id');
             var wrap: HTMLElement = document.createElement('div');
@@ -23,6 +24,12 @@ module UniMath {
             parent.appendChild(wrap);
             MathJax.Hub.Queue(['Typeset', MathJax.Hub, script]);
             return true;
+        }
+        getSource(el: HTMLElement): string {
+            var script: HTMLScriptElement = <HTMLScriptElement> el.querySelector('script[type="math/mml"]');
+            if (!script)
+                return 'Unable to get source';
+            return script.innerHTML;
         }
     }
 
