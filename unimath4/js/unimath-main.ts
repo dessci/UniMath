@@ -134,85 +134,12 @@ module UniMath {
         }
     }
 
-    function shareAction(item: UniMathItem): void {
-        alert('Share');
-    }
-
-    function searchAction(item: UniMathItem): void {
-        alert('Search');
-    }
-
-    var highlightAll: boolean = false;
-    function highlightAllAction(): void {
-        highlightAll = !highlightAll;
-        var nodelist: NodeList = document.getElementsByClassName('unimath');
-        Array.prototype.forEach.call(nodelist, (el: HTMLElement): void => {
-            if (highlightAll) {
-                addClass(el, 'hover');
-            } else {
-                removeClass(el, 'hover');
-            }
-        });
-    }
-
-    function noopAction(): void {
-        alert('Not implemented');
-    }
-
     interface MenuItemData {
         html: string;
-        callback: (item?: UniMathItem) => void;
+        callback: () => void;
         button?: HTMLButtonElement;
         clickHandler?: (ev: PointerEvent) => void;
     }
-
-    var dashboardItems: MenuItemData[] = [
-        { html: '<i class="fa fa-lightbulb-o"></i> Highlight All Equations', callback: highlightAllAction },
-        { html: '<i class="fa fa-question"></i> Action 2', callback: noopAction },
-        { html: '<i class="fa fa-question"></i> Action 3', callback: noopAction },
-        { html: '<i class="fa fa-question"></i> Action 4', callback: noopAction }
-    ];
-
-    function dashboardAction(): void {
-        var dialog: HTMLDialogElement = createDialogElement('Universal Math Dashboard');
-        var body: HTMLElement = elementWithClass('div', 'body');
-        dialog.appendChild(body);
-        document.body.appendChild(dialog);
-
-        var menuContainer: HTMLElement = elementWithClass('div', 'dashboard');
-        dashboardItems.forEach((item: MenuItemData): void => {
-            item.button = document.createElement('button');
-            item.button.innerHTML = item.html;
-            item.clickHandler = (ev: PointerEvent): void => {
-                ev.stopPropagation();
-                dialog.close();
-                item.callback(this);
-            };
-            item.button.addEventListener('click', item.clickHandler, false);
-            menuContainer.appendChild(item.button);
-        });
-        body.appendChild(menuContainer);
-
-        function closer(): void {
-            dialog.removeEventListener('close', closer, false);
-            dashboardItems.forEach((item: MenuItemData): void => {
-                item.button.removeEventListener('click', item.clickHandler, false);
-            });
-        }
-
-        dialog.addEventListener('close', closer, false);
-        dialog.showModal();
-    }
-
-    var menuItems: MenuItemData[] = [
-        {
-            html: '<i class="fa fa-file-text"></i> View MathML Source',
-            callback: (item: UniMathItem): void => item.viewSourceAction()
-        },
-        { html: '<i class="fa fa-share-alt"></i> Share', callback: shareAction },
-        { html: '<i class="fa fa-search"></i> Search', callback: searchAction },
-        { html: '<i class="fa fa-dashboard"></i> Page Dashboard', callback: dashboardAction }
-    ];
 
     class UniMathItem {
         private zoomEl: HTMLElement;
@@ -220,8 +147,32 @@ module UniMath {
         private actionsEl: HTMLElement;
         private activeAction: number;
         private eatFocusClick: boolean = true;
+        static menuItems: MenuItemData[] = [
+            {
+                html: '<i class="fa fa-file-text"></i> View MathML Source',
+                callback: UniMathItem.prototype.viewSourceAction
+            },
+            { html: '<i class="fa fa-share-alt"></i> Share', callback: UniMathItem.prototype.shareAction },
+            { html: '<i class="fa fa-search"></i> Search', callback: UniMathItem.prototype.searchAction },
+            {
+                html: '<i class="fa fa-dashboard"></i> Page Dashboard',
+                callback: UniMathItem.prototype.dashboardAction
+            }
+        ];
 
-        public viewSourceAction(): void {
+        private dashboardAction(): void {
+            this.page.dashboardAction();
+        }
+
+        private shareAction(): void {
+            alert('Share');
+        }
+
+        private searchAction(): void {
+            alert('Search');
+        }
+
+        private viewSourceAction(): void {
             var dialog: HTMLDialogElement = createDialogElement('MathML Source for Equation ' + this.eqnNumber);
             var body: HTMLElement = elementWithClass('div', 'body');
             var text: HTMLTextAreaElement = document.createElement('textarea');
@@ -245,13 +196,13 @@ module UniMath {
                 body.appendChild(document.createTextNode('Error'));
 
             var menuContainer: HTMLElement = elementWithClass('div', 'menu');
-            menuItems.forEach((item: MenuItemData): void => {
+            UniMathItem.menuItems.forEach((item: MenuItemData): void => {
                 item.button = document.createElement('button');
                 item.button.innerHTML = item.html;
                 item.clickHandler = (ev: PointerEvent): void => {
                     ev.stopPropagation();
                     dialog.close();
-                    item.callback(this);
+                    item.callback.call(this);
                 };
                 item.button.addEventListener('click', item.clickHandler, false);
                 menuContainer.appendChild(item.button);
@@ -260,7 +211,7 @@ module UniMath {
 
             function closer(): void {
                 dialog.removeEventListener('close', closer, false);
-                menuItems.forEach((item: MenuItemData): void => {
+                UniMathItem.menuItems.forEach((item: MenuItemData): void => {
                     item.button.removeEventListener('click', item.clickHandler, false);
                 });
             }
@@ -328,17 +279,17 @@ module UniMath {
             return this.activeAction === 0 ? this.zoomEl : this.menuEl;
         }*/
 
-        constructor(private el: HTMLElement, private eqnNumber: number, private focusManager: IFocusManager) {
+        constructor(private el: HTMLElement, private eqnNumber: number, private page: UniMathPage) {
             el.setAttribute('tabindex', '0');
-            el.addEventListener('focus', (ev: FocusEvent): void => { focusManager.focusIn(this); }, false);
-            el.addEventListener('blur', (): void => { focusManager.focusOut(); }, false);
+            el.addEventListener('focus', (ev: FocusEvent): void => page.focusIn(this), false);
+            el.addEventListener('blur', (): void => page.focusOut(), false);
             el.addEventListener('mouseenter', (): void => {
                 this.eatFocusClick = false;
-                focusManager.hoverIn(this);
+                page.hoverIn(this);
             }, false);
             el.addEventListener('mouseleave', (): void => {
                 this.eatFocusClick = true;
-                focusManager.hoverOut();
+                page.hoverOut();
             }, false);
         }
         gotFocus(): void {
@@ -375,33 +326,95 @@ module UniMath {
         }
     }
 
-    var focusManager: IFocusManager = new FocusManager();
+    class UniMathPage extends FocusManager {
+        private items: UniMathItem[];
+        private highlightAll: boolean = false;
+        static dashboardItems: MenuItemData[] = [
+            {
+                html: '<i class="fa fa-lightbulb-o"></i> Highlight All Equations',
+                callback: UniMathPage.prototype.highlightAllAction
+            },
+            { html: '<i class="fa fa-question"></i> Action 2', callback: UniMathPage.prototype.noopAction },
+            { html: '<i class="fa fa-question"></i> Action 3', callback: UniMathPage.prototype.noopAction },
+            { html: '<i class="fa fa-question"></i> Action 4', callback: UniMathPage.prototype.noopAction }
+        ];
+
+        public dashboardAction(): void {
+            var dialog: HTMLDialogElement = createDialogElement('Universal Math Dashboard');
+            var body: HTMLElement = elementWithClass('div', 'body');
+            dialog.appendChild(body);
+            document.body.appendChild(dialog);
+
+            var menuContainer: HTMLElement = elementWithClass('div', 'dashboard');
+            UniMathPage.dashboardItems.forEach((item: MenuItemData): void => {
+                item.button = document.createElement('button');
+                item.button.innerHTML = item.html;
+                item.clickHandler = (ev: PointerEvent): void => {
+                    ev.stopPropagation();
+                    dialog.close();
+                    item.callback.call(this);
+                };
+                item.button.addEventListener('click', item.clickHandler, false);
+                menuContainer.appendChild(item.button);
+            });
+            body.appendChild(menuContainer);
+
+            function closer(): void {
+                dialog.removeEventListener('close', closer, false);
+                UniMathPage.dashboardItems.forEach((item: MenuItemData): void => {
+                    item.button.removeEventListener('click', item.clickHandler, false);
+                });
+            }
+
+            dialog.addEventListener('close', closer, false);
+            dialog.showModal();
+        }
+
+        private noopAction(): void {
+            alert('Not implemented');
+        }
+
+        private highlightAllAction(): void {
+            this.highlightAll = !this.highlightAll;
+            this.items.forEach((item: UniMathItem): void => {
+                if (this.highlightAll) {
+                    item.gotHover();
+                } else {
+                    item.lostHover();
+                }
+            });
+        }
+
+        constructor(nodelist: NodeList) {
+            super();
+            var totalCount: number = 0, blockCount: number = 0, inlineCount: number = 0;
+            this.items = Array.prototype.map.call(nodelist, (el: HTMLElement): UniMathItem => {
+                totalCount++;
+                if (el.localName === 'div') {
+                    blockCount++;
+                } else {
+                    inlineCount++;
+                }
+                return new UniMathItem(el, totalCount, this);
+            });
+            console.log('Initialized UniMath page: ' + totalCount
+                + ' (' + inlineCount + ' inline, ' + blockCount + ' block)');
+        }
+
+    }
 
     export function init(): void {
-        var totalCount: number = 0, blockCount: number = 0, inlineCount: number = 0;
-        var nodelist: NodeList = document.getElementsByClassName('unimath');
-        Array.prototype.forEach.call(nodelist, (el: HTMLElement): void => {
-            totalCount++;
-            if (el.localName === 'div') {
-                blockCount++;
-            } else {
-                inlineCount++;
-            }
-            new UniMathItem(el, totalCount, focusManager);
-        });
+        var page: UniMathPage = new UniMathPage(document.getElementsByClassName('unimath'));
 
         var dashboardTrigger: HTMLElement = document.getElementById('unimath-dashboard-trigger');
         if (dashboardTrigger) {
             dashboardTrigger.addEventListener('click', (ev: PointerEvent): void => {
                 ev.preventDefault();
-                dashboardAction();
+                page.dashboardAction();
             }, false);
         }
 
         checkDialogSupport();
-
-        console.log('Initialized UniMath: ' + (inlineCount + blockCount)
-            + ' (' + inlineCount + ' inline, ' + blockCount + ' block)');
 
         /*var src = '<math><mi>    <malignmark/>  <malignmark/> regre   </mi></math>';
         //var src = '<math>x</math>';

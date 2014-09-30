@@ -119,6 +119,12 @@ var UniMath;
 })(UniMath || (UniMath = {}));
 /// <reference path="unimath-mathjax.ts" />
 /// <reference path="unimath-xml.ts" />
+var __extends = this.__extends || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    __.prototype = b.prototype;
+    d.prototype = new __();
+};
 
 var UniMath;
 (function (UniMath) {
@@ -233,91 +239,15 @@ var UniMath;
         return FocusManager;
     })();
 
-    function shareAction(item) {
-        alert('Share');
-    }
-
-    function searchAction(item) {
-        alert('Search');
-    }
-
-    var highlightAll = false;
-    function highlightAllAction() {
-        highlightAll = !highlightAll;
-        var nodelist = document.getElementsByClassName('unimath');
-        Array.prototype.forEach.call(nodelist, function (el) {
-            if (highlightAll) {
-                addClass(el, 'hover');
-            } else {
-                removeClass(el, 'hover');
-            }
-        });
-    }
-
-    function noopAction() {
-        alert('Not implemented');
-    }
-
-    var dashboardItems = [
-        { html: '<i class="fa fa-lightbulb-o"></i> Highlight All Equations', callback: highlightAllAction },
-        { html: '<i class="fa fa-question"></i> Action 2', callback: noopAction },
-        { html: '<i class="fa fa-question"></i> Action 3', callback: noopAction },
-        { html: '<i class="fa fa-question"></i> Action 4', callback: noopAction }
-    ];
-
-    function dashboardAction() {
-        var _this = this;
-        var dialog = createDialogElement('Universal Math Dashboard');
-        var body = elementWithClass('div', 'body');
-        dialog.appendChild(body);
-        document.body.appendChild(dialog);
-
-        var menuContainer = elementWithClass('div', 'dashboard');
-        dashboardItems.forEach(function (item) {
-            item.button = document.createElement('button');
-            item.button.innerHTML = item.html;
-            item.clickHandler = function (ev) {
-                ev.stopPropagation();
-                dialog.close();
-                item.callback(_this);
-            };
-            item.button.addEventListener('click', item.clickHandler, false);
-            menuContainer.appendChild(item.button);
-        });
-        body.appendChild(menuContainer);
-
-        function closer() {
-            dialog.removeEventListener('close', closer, false);
-            dashboardItems.forEach(function (item) {
-                item.button.removeEventListener('click', item.clickHandler, false);
-            });
-        }
-
-        dialog.addEventListener('close', closer, false);
-        dialog.showModal();
-    }
-
-    var menuItems = [
-        {
-            html: '<i class="fa fa-file-text"></i> View MathML Source',
-            callback: function (item) {
-                return item.viewSourceAction();
-            }
-        },
-        { html: '<i class="fa fa-share-alt"></i> Share', callback: shareAction },
-        { html: '<i class="fa fa-search"></i> Search', callback: searchAction },
-        { html: '<i class="fa fa-dashboard"></i> Page Dashboard', callback: dashboardAction }
-    ];
-
     var UniMathItem = (function () {
         /*private currentActionElement(): HTMLElement {
         return this.activeAction === 0 ? this.zoomEl : this.menuEl;
         }*/
-        function UniMathItem(el, eqnNumber, focusManager) {
+        function UniMathItem(el, eqnNumber, page) {
             var _this = this;
             this.el = el;
             this.eqnNumber = eqnNumber;
-            this.focusManager = focusManager;
+            this.page = page;
             this.eatFocusClick = true;
             this.clickHandler = function () {
                 if (_this.eatFocusClick) {
@@ -350,20 +280,32 @@ var UniMath;
             };
             el.setAttribute('tabindex', '0');
             el.addEventListener('focus', function (ev) {
-                focusManager.focusIn(_this);
+                return page.focusIn(_this);
             }, false);
             el.addEventListener('blur', function () {
-                focusManager.focusOut();
+                return page.focusOut();
             }, false);
             el.addEventListener('mouseenter', function () {
                 _this.eatFocusClick = false;
-                focusManager.hoverIn(_this);
+                page.hoverIn(_this);
             }, false);
             el.addEventListener('mouseleave', function () {
                 _this.eatFocusClick = true;
-                focusManager.hoverOut();
+                page.hoverOut();
             }, false);
         }
+        UniMathItem.prototype.dashboardAction = function () {
+            this.page.dashboardAction();
+        };
+
+        UniMathItem.prototype.shareAction = function () {
+            alert('Share');
+        };
+
+        UniMathItem.prototype.searchAction = function () {
+            alert('Search');
+        };
+
         UniMathItem.prototype.viewSourceAction = function () {
             var dialog = createDialogElement('MathML Source for Equation ' + this.eqnNumber);
             var body = elementWithClass('div', 'body');
@@ -389,13 +331,13 @@ var UniMath;
                 body.appendChild(document.createTextNode('Error'));
 
             var menuContainer = elementWithClass('div', 'menu');
-            menuItems.forEach(function (item) {
+            UniMathItem.menuItems.forEach(function (item) {
                 item.button = document.createElement('button');
                 item.button.innerHTML = item.html;
                 item.clickHandler = function (ev) {
                     ev.stopPropagation();
                     dialog.close();
-                    item.callback(_this);
+                    item.callback.call(_this);
                 };
                 item.button.addEventListener('click', item.clickHandler, false);
                 menuContainer.appendChild(item.button);
@@ -404,7 +346,7 @@ var UniMath;
 
             function closer() {
                 dialog.removeEventListener('close', closer, false);
-                menuItems.forEach(function (item) {
+                UniMathItem.menuItems.forEach(function (item) {
                     item.button.removeEventListener('click', item.clickHandler, false);
                 });
             }
@@ -460,35 +402,110 @@ var UniMath;
         UniMathItem.prototype.lostHover = function () {
             removeClass(this.el, 'hover');
         };
+        UniMathItem.menuItems = [
+            {
+                html: '<i class="fa fa-file-text"></i> View MathML Source',
+                callback: UniMathItem.prototype.viewSourceAction
+            },
+            { html: '<i class="fa fa-share-alt"></i> Share', callback: UniMathItem.prototype.shareAction },
+            { html: '<i class="fa fa-search"></i> Search', callback: UniMathItem.prototype.searchAction },
+            {
+                html: '<i class="fa fa-dashboard"></i> Page Dashboard',
+                callback: UniMathItem.prototype.dashboardAction
+            }
+        ];
         return UniMathItem;
     })();
 
-    var focusManager = new FocusManager();
+    var UniMathPage = (function (_super) {
+        __extends(UniMathPage, _super);
+        function UniMathPage(nodelist) {
+            var _this = this;
+            _super.call(this);
+            this.highlightAll = false;
+            var totalCount = 0, blockCount = 0, inlineCount = 0;
+            this.items = Array.prototype.map.call(nodelist, function (el) {
+                totalCount++;
+                if (el.localName === 'div') {
+                    blockCount++;
+                } else {
+                    inlineCount++;
+                }
+                return new UniMathItem(el, totalCount, _this);
+            });
+            console.log('Initialized UniMath page: ' + totalCount + ' (' + inlineCount + ' inline, ' + blockCount + ' block)');
+        }
+        UniMathPage.prototype.dashboardAction = function () {
+            var _this = this;
+            var dialog = createDialogElement('Universal Math Dashboard');
+            var body = elementWithClass('div', 'body');
+            dialog.appendChild(body);
+            document.body.appendChild(dialog);
+
+            var menuContainer = elementWithClass('div', 'dashboard');
+            UniMathPage.dashboardItems.forEach(function (item) {
+                item.button = document.createElement('button');
+                item.button.innerHTML = item.html;
+                item.clickHandler = function (ev) {
+                    ev.stopPropagation();
+                    dialog.close();
+                    item.callback.call(_this);
+                };
+                item.button.addEventListener('click', item.clickHandler, false);
+                menuContainer.appendChild(item.button);
+            });
+            body.appendChild(menuContainer);
+
+            function closer() {
+                dialog.removeEventListener('close', closer, false);
+                UniMathPage.dashboardItems.forEach(function (item) {
+                    item.button.removeEventListener('click', item.clickHandler, false);
+                });
+            }
+
+            dialog.addEventListener('close', closer, false);
+            dialog.showModal();
+        };
+
+        UniMathPage.prototype.noopAction = function () {
+            alert('Not implemented');
+        };
+
+        UniMathPage.prototype.highlightAllAction = function () {
+            var _this = this;
+            this.highlightAll = !this.highlightAll;
+            this.items.forEach(function (item) {
+                if (_this.highlightAll) {
+                    item.gotHover();
+                } else {
+                    item.lostHover();
+                }
+            });
+        };
+        UniMathPage.dashboardItems = [
+            {
+                html: '<i class="fa fa-lightbulb-o"></i> Highlight All Equations',
+                callback: UniMathPage.prototype.highlightAllAction
+            },
+            { html: '<i class="fa fa-question"></i> Action 2', callback: UniMathPage.prototype.noopAction },
+            { html: '<i class="fa fa-question"></i> Action 3', callback: UniMathPage.prototype.noopAction },
+            { html: '<i class="fa fa-question"></i> Action 4', callback: UniMathPage.prototype.noopAction }
+        ];
+        return UniMathPage;
+    })(FocusManager);
 
     function init() {
-        var totalCount = 0, blockCount = 0, inlineCount = 0;
-        var nodelist = document.getElementsByClassName('unimath');
-        Array.prototype.forEach.call(nodelist, function (el) {
-            totalCount++;
-            if (el.localName === 'div') {
-                blockCount++;
-            } else {
-                inlineCount++;
-            }
-            new UniMathItem(el, totalCount, focusManager);
-        });
+        var page = new UniMathPage(document.getElementsByClassName('unimath'));
 
         var dashboardTrigger = document.getElementById('unimath-dashboard-trigger');
         if (dashboardTrigger) {
             dashboardTrigger.addEventListener('click', function (ev) {
                 ev.preventDefault();
-                dashboardAction();
+                page.dashboardAction();
             }, false);
         }
 
         checkDialogSupport();
-
-        console.log('Initialized UniMath: ' + (inlineCount + blockCount) + ' (' + inlineCount + ' inline, ' + blockCount + ' block)');
         /*var src = '<math><mi>    <malignmark/>  <malignmark/> regre   </mi></math>';
         //var src = '<math>x</math>';
         console.log(src);
