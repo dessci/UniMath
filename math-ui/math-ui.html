@@ -1,0 +1,130 @@
+<link rel="import" href="math-ui-controller.html">
+<link rel="import" href="math-ui-eqn-menu.html">
+<link rel="import" href="math-ui-plain.html">
+<link rel="import" href="math-ui-mml.html">
+
+<style>
+    math-ui {
+        position: relative;
+        border: 3px solid transparent;
+        border-radius: 5px;
+        padding: 1px;
+        margin: -4px;  /* -(border-width + padding) */
+        outline: none;
+        cursor: pointer;
+        display: inline-block;
+    }
+    math-ui[display="block"] {
+        display: block;
+        text-align: center;
+    }
+    math-ui:hover, math-ui.highlight {
+        border: 3px solid #afbfff;
+    }
+    math-ui:focus {
+        border: 3px solid #4f9fcf;
+    }
+</style>
+
+<script>
+(function () {
+    'use strict';
+
+    var importDoc = (document._currentScript ? document._currentScript : document.currentScript).ownerDocument;
+    var mathUIDialog = document.createElement('math-ui-dialog');
+    var element = Object.create(HTMLElement.prototype);
+    var controller;
+
+    function async(fn) {
+        requestAnimationFrame(fn);
+        //setTimeout(fn, 0);
+    }
+
+    element.domReady = function () {
+        if (!this.handler) {
+            var mathNode = this.firstElementChild;
+            if (mathNode && mathNode.tagName === 'math') {
+                this.handler = document.createElement('math-ui-mml');
+                this.ownHandler = true;
+            } else if (mathNode && mathNode.getSourceTypes) {
+                this.handler = mathNode;
+            } else {
+                this.handler = document.createElement('math-ui-plain');
+                this.ownHandler = true;
+            }
+        }
+        if (!this.hasAttribute('display') && this.handler.getDisplay) {
+            var display = this.ownHandler ? this.handler.getDisplay.call(this) : this.handler.getDisplay();
+            if (display)
+                this.setAttribute('display', display);
+        }
+    }
+
+    element.showMenu = function () {
+        this.menu = document.createElement('math-ui-eqn-menu');
+        (this.shadowRoot ? this.shadowRoot : this).appendChild(this.menu);
+        this.menu.style.top = (this.offsetHeight - 3) + 'px';
+    };
+
+    element.zoomAction = function () {
+        alert('zoom');
+    };
+
+    element.sourceAction = function () {
+        alert('source');
+    };
+
+    element.searchAction = function () {
+        alert('search');
+    };
+
+    element.shareAction = function () {
+        alert('share');
+    };
+
+    element.showDashboard = function () {
+        controller.showMenu();
+    };
+
+    element.removeMenu = function () {
+        var parent = this.shadowRoot ? this.shadowRoot : this;
+        Array.prototype.forEach.call(parent.querySelectorAll('math-ui-eqn-menu'), function (el) {
+            parent.removeChild(el);
+        });
+        this.menu = null;
+    };
+
+    element.createdCallback = function () {
+        this.tabIndex = 0;
+        if (this.hasAttribute('use')) {
+            this.handler = document.createElement(this.getAttribute('use'));
+            this.ownHandler = true;
+            if (this.handler.createdCallback)
+                this.handler.createdCallback.call(this);
+        }
+    };
+
+    element.attachedCallback = function () {
+        if (!controller)
+            controller = document.createElement('math-ui-controller');
+        this.eqnId = controller.addItem(this);
+        this.menu = null;
+        if (this.handler && this.handler.attachedCallback)
+            this.handler.attachedCallback.call(this);
+        var self = this;
+        this.addEventListener('focus', function (ev) { self.showMenu(); }, false);
+        this.addEventListener('blur', function (ev) { self.removeMenu(); }, false);
+        this.addEventListener('keydown', function (ev) {
+            if (!self.menu) return;
+            if (ev.keyCode === 39) self.menu.navNext();
+            else if (ev.keyCode === 37) self.menu.navPrev();
+            else if (ev.keyCode === 13) async(function () { self.menu.triggerSelection(); });
+            else console.log('keydown', ev.keyCode);
+        }, false);
+        async(this.domReady.bind(this));
+    };
+
+    document.registerElement('math-ui', {prototype: element});
+
+})();
+</script>

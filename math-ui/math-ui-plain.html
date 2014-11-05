@@ -1,0 +1,14 @@
+﻿<script>
+(function() {
+    'use strict';
+
+    var element = Object.create(HTMLElement.prototype);
+
+    element.getSourceTypes = function () {
+        return ['text/html'];
+    };
+
+    document.registerElement('math-ui-plain', {prototype: element});
+
+})();
+</script>
