@@ -119,7 +119,8 @@
             if (ev.keyCode === 39) self.menu.navNext();
             else if (ev.keyCode === 37) self.menu.navPrev();
             else if (ev.keyCode === 13) async(function () { self.menu.triggerSelection(); });
-            else console.log('keydown', ev.keyCode);
+            else if (ev.keyCode === 27) self.blur();
+            //else console.log('keydown', ev.keyCode);
         }, false);
         async(this.domReady.bind(this));
     };
