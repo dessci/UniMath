@@ -36,9 +36,21 @@
     };
 
     element.getSourceTypes = function () {
-        return ['application/mathml+xml'];
+        return ['MathML'];
     };
 
-    document.registerElement('math-mml', {prototype: element});
+    element.getSource = function (type) {
+        return type === 'MathML' ? this.querySelector('math') : null;
+    };
+
+    element.clonePresentation = function (dest) {
+        var clone = document.createElement('math-mml');
+        var math = this.querySelector('math');
+        if (math)
+            clone.appendChild(math.cloneNode(true));
+        dest.appendChild(clone);
+    };
+
+    document.registerElement('math-mml', { prototype: element });
 })();
 </script>

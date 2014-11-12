@@ -19,7 +19,15 @@
     };
 
     element.getSourceTypes = function () {
-        return [];
+        return this.querySelector('math') ? ['MathML'] : [];
+    };
+
+    element.getSource = function (type) {
+        return type === 'MathML' ? this.querySelector('math') : null;
+    };
+
+    element.clonePresentation = function (dest) {
+        dest.appendChild(this.cloneNode(true));
     };
 
     document.registerElement('eqnstore-item', {prototype: element});

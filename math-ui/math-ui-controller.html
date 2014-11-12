@@ -15,7 +15,6 @@
             <button>Action 3</button>
             <button>Action 4</button>
         </div>
-        </div>
     </dialog>
 </template>
 
@@ -47,15 +46,18 @@
         var tmpl = importDoc.querySelector('template');
         var node = document.importNode(tmpl.content, true);
         var buttons = node.querySelectorAll('button');
-        var dialog = mathUIDialog.showModal(node);
+        var dialog = node.querySelector('dialog');
         var self = this;
-        function toggleHighlightAll(ev) {
-            async(function () {
-                self.toggleHighlightAll();
-                dialog.close();
-            });
-        }
-        buttons[0].addEventListener('click', toggleHighlightAll);
+        mathUIDialog.showModal(dialog, function (ev) {
+            var action;
+            if (ev.target === buttons[0])
+                action = element.toggleHighlightAll.bind(self);
+            if (action) {
+                async(action);
+                return true;
+            }
+            return ev.target === dialog;
+        });
     };
 
     document.registerElement('math-ui-controller', {prototype: element});
