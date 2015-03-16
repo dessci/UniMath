@@ -39,7 +39,7 @@
           createCookie(data.key, data.value, 7);
         } else if (data.command === 'get') {
           var value = readCookie(data.key);
-          ev.source.postMessage({command: 'value', key: data.key, value: value}, ev.origin);
+          ev.source.postMessage(JSON.stringify({command: 'value', key: data.key, value: value}), ev.origin);
         }
       }
 
