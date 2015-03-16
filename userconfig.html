@@ -7,6 +7,8 @@
 
       function createCookie(name, value, days) {
         var expires = "";
+        if (hasLog)
+          console.log('createCookie');
         if (days) {
           var date = new Date();
           date.setTime(date.getTime() + (days*24*60*60*1000));
@@ -39,6 +41,8 @@
         if (hasLog)
           console.log('iframe: Command ' + data.command + ' from ' + ev.origin);
         if (data.command === 'set') {
+          if (hasLog)
+            console.log('set');
           createCookie(data.key, data.value, 7);
         } else if (data.command === 'get') {
           var value = readCookie(data.key),
