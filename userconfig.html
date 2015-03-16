@@ -30,16 +30,20 @@
         createCookie(name, "", -1);
       }
 
+      var hasLog = window.console && console.log;
+
       function onMessage(ev) {
         var data = JSON.parse(ev.data);
-        if (window.console && console.log) {
+        if (hasLog)
           console.log('iframe: Command ' + data.command + ' from ' + ev.origin);
-        }
         if (data.command === 'set') {
           createCookie(data.key, data.value, 7);
         } else if (data.command === 'get') {
-          var value = readCookie(data.key);
-          ev.source.postMessage(JSON.stringify({command: 'value', key: data.key, value: value}), ev.origin);
+          var value = readCookie(data.key),
+              msg = JSON.stringify({command: 'value', key: data.key, value: value});
+          if (hasLog)
+            console.log(msg)
+          ev.source.postMessage(msg, ev.origin);
         }
       }
 
