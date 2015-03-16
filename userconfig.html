@@ -3,6 +3,8 @@
 <head>
   <script>
     (function () {
+      var hasLog = window.console && console.log;
+
       function createCookie(name, value, days) {
         var expires = "";
         if (days) {
@@ -11,6 +13,8 @@
           expires = "; expires=" + date.toGMTString();
         }
         document.cookie = name + "=" + value + expires + "; path=/";
+        if (hasLog)
+          console.log(document.cookie);
       }
 
       function readCookie(name) {
@@ -29,8 +33,6 @@
       function eraseCookie(name) {
         createCookie(name, "", -1);
       }
-
-      var hasLog = window.console && console.log;
 
       function onMessage(ev) {
         var data = JSON.parse(ev.data);
