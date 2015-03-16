@@ -31,8 +31,10 @@
       }
 
       function onMessage(ev) {
-        if (window.console && console.log)
+        if (window.console && console.log) {
+          console.log(ev);
           console.log('iframe: Command ' + ev.data.command + ' from ' + ev.origin);
+        }
         if (ev.data.command === 'set') {
           createCookie(ev.data.key, ev.data.value, 7);
         } else if (ev.data.command === 'get') {
