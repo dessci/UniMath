@@ -1,0 +1,44 @@
+﻿body {
+  font-family: sans-serif; }
+
+math-item {
+  position: relative;
+  border: 3px solid transparent;
+  border-radius: 3px;
+  padding: 2px;
+  margin: -5px;
+  outline: none;
+  cursor: pointer;
+  white-space: nowrap; }
+  math-item:hover, math-item.focus, math-item .math-ui-focus-menu {
+    background-color: #fff;
+    box-shadow: 3px 3px 1px rgba(0, 0, 0, 0.8); }
+  math-item:hover {
+    border-color: #b2dfdb; }
+  math-item.focus {
+    border-color: #009688; }
+  math-item .math-ui-focus-menu {
+    font-family: 'Roboto', sans-serif;
+    font-size: 14px;
+    position: absolute;
+    left: 8px;
+    top: 100%;
+    border: 3px solid #009688;
+    border-bottom-left-radius: 3px;
+    border-bottom-right-radius: 3px;
+    padding: 3px;
+    z-index: 1; }
+    math-item .math-ui-focus-menu .eraser {
+      position: absolute;
+      width: 100%;
+      left: 0;
+      top: -3px;
+      height: 3px;
+      background-color: #fff; }
+    math-item .math-ui-focus-menu span {
+      color: #212121;
+      padding: 0 0.2em; }
+      math-item .math-ui-focus-menu span.icon:hover {
+        color: #009688; }
+
+/*# sourceMappingURL=main.css.map */
