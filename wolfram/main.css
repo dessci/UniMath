@@ -10,12 +10,12 @@ math-item {
   outline: none;
   cursor: pointer;
   white-space: nowrap; }
-  math-item:hover, math-item.focus, math-item .math-ui-focus-menu {
+  math-item:hover, math-item.active, math-item .math-ui-focus-menu {
     background-color: #f8f8f8;
     box-shadow: 2px 2px 1px rgba(0, 0, 0, 0.8); }
   math-item:hover {
     border-color: #b2dfdb; }
-  math-item.focus {
+  math-item.active {
     border-color: #009688; }
   math-item .math-ui-focus-menu {
     font-family: 'Roboto', sans-serif;
