@@ -1,5 +1,22 @@
-﻿body {
+﻿@import url(http://fonts.googleapis.com/css?family=Roboto:400,700);
+body {
   font-family: sans-serif; }
+
+.math-ui {
+  font-family: 'Roboto', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  margin: 0;
+  padding: 0; }
+  .math-ui select, .math-ui textarea {
+    color: inherit;
+    font: inherit;
+    margin: 0;
+    box-sizing: border-box; }
+  .math-ui select {
+    text-transform: none; }
+  .math-ui textarea {
+    overflow: auto; }
 
 math-item {
   position: relative;
@@ -10,52 +27,71 @@ math-item {
   outline: none;
   cursor: pointer;
   white-space: nowrap; }
-  math-item:hover, math-item.active, math-item .math-ui-focus-menu {
+  math-item:hover, math-item.active {
     background-color: #f8f8f8;
     box-shadow: 2px 2px 1px rgba(0, 0, 0, 0.8); }
   math-item:hover {
     border-color: #b2dfdb; }
   math-item.active {
     border-color: #009688; }
-  math-item .math-ui-focus-menu {
-    font-family: 'Roboto', sans-serif;
-    font-size: 14px;
+
+.math-ui.item-zoom {
+  background-color: #f8f8f8;
+  box-shadow: 2px 2px 1px rgba(0, 0, 0, 0.8);
+  border: 2px solid #009688;
+  border-radius: 3px;
+  padding: 3px;
+  z-index: 1;
+  color: #212121;
+  position: absolute;
+  font-size: 200%;
+  left: 0.2em;
+  top: 0.2em; }
+  .math-ui.item-zoom math-item {
+    display: inline-block;
+    border: none;
+    padding: 0;
+    margin: 0;
+    box-shadow: none; }
+
+.math-ui.focus-menu {
+  background-color: #f8f8f8;
+  box-shadow: 2px 2px 1px rgba(0, 0, 0, 0.8);
+  border: 2px solid #009688;
+  border-radius: 3px;
+  padding: 3px;
+  z-index: 1;
+  color: #212121;
+  position: absolute;
+  left: 8px;
+  top: 100%; }
+  .math-ui.focus-menu .eraser {
     position: absolute;
-    left: 8px;
-    top: 100%;
-    border: 2px solid #009688;
+    left: 0;
+    top: -3px;
+    width: 100%;
+    max-width: 100%;
+    height: 5px;
+    background-color: #f8f8f8; }
+  .math-ui.focus-menu .eqn-name {
+    font-weight: 700; }
+  .math-ui.focus-menu .top > span {
+    padding: 3px; }
+    .math-ui.focus-menu .top > span.icon:hover {
+      color: #009688; }
+  .math-ui.focus-menu .body select, .math-ui.focus-menu .body textarea {
+    display: block;
+    width: 100%;
     border-radius: 3px;
-    padding: 3px;
-    z-index: 1;
-    color: #212121; }
-    math-item .math-ui-focus-menu .eraser {
-      position: absolute;
-      left: 0;
-      top: -3px;
-      width: 100%;
-      max-width: 100%;
-      height: 5px;
-      background-color: #f8f8f8; }
-    math-item .math-ui-focus-menu > span {
-      position: relative; }
-      math-item .math-ui-focus-menu > span > span {
-        padding: 0 0.2em; }
-        math-item .math-ui-focus-menu > span > span:hover {
-          color: #009688; }
-      math-item .math-ui-focus-menu > span > div {
-        position: absolute;
-        top: 1.2em;
-        left: 0.2em;
-        background-color: #f8f8f8;
-        border: 2px solid #009688;
-        border-radius: 3px;
-        padding: 3px; }
-        math-item .math-ui-focus-menu > span > div > a {
-          display: block;
-          text-align: left;
-          color: #212121;
-          text-decoration: none; }
-          math-item .math-ui-focus-menu > span > div > a:hover {
-            background-color: #c5c5c5; }
+    margin: 3px 0; }
+
+div.math-ui.list-group > a {
+  display: block;
+  text-align: left;
+  color: #212121;
+  text-decoration: none;
+  padding: 3px 3px 3px 12px; }
+  div.math-ui.list-group > a:hover {
+    background-color: #c5c5c5; }
 
 /*# sourceMappingURL=main.css.map */
