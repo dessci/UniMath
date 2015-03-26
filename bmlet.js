@@ -20,8 +20,8 @@ function para(txt) {
 a = document.createElement('a');
 a.href = "#";
 a.appendChild(document.createTextNode('[remove sidebar]'));
-a.addEventListener('click', function (e) {
-  e.preventDefault();
+a.addEventListener('click', function (ev) {
+  ev.preventDefault();
   document.querySelector('html').style.marginLeft = '';
   s.parentNode.removeChild(s);
   e.parentNode.removeChild(e);
