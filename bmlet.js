@@ -14,6 +14,7 @@ e.style.width = "286px";
 e.style.backgroundColor = "#fff";
 e.style.borderLeft = "4px solid #888";
 e.style.padding = "5px";
+e.style.overflowY = "scroll"
 
 function para(txt) {
   var p = document.createElement('p');
