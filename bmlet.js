@@ -23,17 +23,15 @@ a.appendChild(document.createTextNode('[remove sidebar]'));
 a.addEventListener('click', function (e) {
   e.preventDefault();
   document.querySelector('html').style.marginLeft = '';
-  document.querySelector('head').removeChild(s);
-  document.body.removeChild(e);
+  s.parentNode.removeChild(s);
+  e.parentNode.removeChild(e);
 });
 e.appendChild(a);
 
 e.appendChild(para('This is the sidebar'));
 e.appendChild(para('Item properties can be put here'));
-
-for (k=0; k < 10; k++) {
+for (k=0; k < 10; k++)
   e.appendChild(para('Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'));
-}
 
 document.body.appendChild(e);
 
