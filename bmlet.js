@@ -5,7 +5,7 @@ var e, k;
 document.querySelector('html').style.marginLeft = "300px";
 
 e = document.createElement('style');
-e.textContent="#math-ui { position: fixed; top: 0; bottom: 0; left: 0; width: 286px; background-color: #fff; border-right: 4px solid #888; padding: 5px; overflow-y: scroll; } #math-ui p { font: 14px/16px sans serif; }";
+e.textContent="#math-ui { position: fixed; top: 0; bottom: 0; left: 0; width: 286px; background-color: #fff; border-right: 4px solid #888; padding: 5px; overflow-y: scroll; color: #000; text-align: left; z-index: 1000; } #math-ui p { font: 14px/16px sans serif; margin: 4px 0; }";
 document.querySelector('head').appendChild(e);
 
 e = document.createElement('div');
