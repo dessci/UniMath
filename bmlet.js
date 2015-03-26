@@ -6,6 +6,7 @@ e = document.querySelector('body');
 e.style.marginRight = "300px";
 
 e = document.createElement('div');
+e.id = 'math-ui';
 e.style.position = "fixed";
 e.style.top = "0";
 e.style.bottom = "0";
@@ -14,7 +15,7 @@ e.style.width = "286px";
 e.style.backgroundColor = "#fff";
 e.style.borderLeft = "4px solid #888";
 e.style.padding = "5px";
-e.style.overflowY = "scroll"
+e.style.overflowY = "scroll";
 
 function para(txt) {
   var p = document.createElement('p');
