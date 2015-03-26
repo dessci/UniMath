@@ -2,24 +2,17 @@
 
 var e, k;
 
-e = document.querySelector('body');
-e.style.marginRight = "300px";
+document.querySelector('html').style.marginLeft = "300px";
+
+e = document.createElement('style');
+e.textContent="#math-ui { position: fixed; top: 0; bottom: 0; left: 0; width: 286px; background-color: #fff; border-right: 4px solid #888; padding: 5px; overflow-y: scroll; } #math-ui p { font: 14px/16px sans serif; }";
+document.querySelector('head').appendChild(e);
 
 e = document.createElement('div');
-e.id = 'math-ui';
-e.style.position = "fixed";
-e.style.top = "0";
-e.style.bottom = "0";
-e.style.right = "0";
-e.style.width = "286px";
-e.style.backgroundColor = "#fff";
-e.style.borderLeft = "4px solid #888";
-e.style.padding = "5px";
-e.style.overflowY = "scroll";
+e.setAttribute('id', 'math-ui');
 
 function para(txt) {
   var p = document.createElement('p');
-  p.style.font = "14px/16px sans-serif";
   p.appendChild(document.createTextNode(txt));
   return p;
 }
