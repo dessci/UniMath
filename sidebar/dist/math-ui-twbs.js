@@ -94,10 +94,10 @@ var FlorianMath;
             var a = ['dockleft', 'dockright', 'dockbottom', 'floatleft', 'floatright', 'floatbottom'], k = FlorianMath.indexOf(a, hash.substr(1));
             return 'math-ui-bar-' + a[k < 0 ? 0 : k];
         })(location.hash);
-        $(doc.documentElement).addClass(sidebarClass);
         $('#math-ui-bar-remove').click(function (ev) {
             ev.preventDefault();
             $('#math-ui-bar').removeClass('show');
+            $(doc.documentElement).removeClass(sidebarClass);
         });
         // Zoom
         function zoomAction(item) {
@@ -125,7 +125,10 @@ var FlorianMath;
         function showMenu(item) {
             var $item = $(item), contentElement, display_inline, bodyHandler, eraser = $('<div class="eraser"/>'), icons = map(['menu-hamburger', 'zoom-in', 'star-empty', 'question-sign'], function (i) { return $('<span class="glyphicon glyphicon-' + i + '" />'); }), top = $('<div class="top" />').append($('<span class="eqn-name" />').append(getName(item)), icons), body = $('<div class="body" />'), menu = $('<div class="math-ui focus-menu" />').append(eraser, top, body);
             function showCommands() {
-                $('#math-ui-bar').addClass('show');
+                $(doc.documentElement).addClass(sidebarClass);
+                FlorianMath.async(function () {
+                    $('#math-ui-bar').addClass('show');
+                });
             }
             function doZoom() {
                 $item.blur();
