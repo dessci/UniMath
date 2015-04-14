@@ -3958,10 +3958,10 @@ math-item {
   outline: none;
   cursor: pointer;
   white-space: nowrap; }
-  math-item:hover, math-item.active {
+  math-item:hover, math-item.active, math-item.highlight {
     background-color: #f8f8f8;
     box-shadow: 2px 2px 1px rgba(0, 0, 0, 0.8); }
-  math-item:hover {
+  math-item:hover, math-item.highlight {
     border-color: #b2dfdb; }
   math-item.active {
     border-color: #009688; }
@@ -4059,10 +4059,20 @@ body.math-ui-show #math-ui-bar {
   body.math-ui-show #math-ui-bar > .panel {
     min-height: 100%;
     background-color: transparent; }
+    body.math-ui-show #math-ui-bar > .panel > .btn-group > .btn {
+      border-radius: 0; }
+      body.math-ui-show #math-ui-bar > .panel > .btn-group > .btn.active {
+        background-color: transparent;
+        color: #000; }
+      body.math-ui-show #math-ui-bar > .panel > .btn-group > .btn.disabled {
+        opacity: 1;
+        filter: alpha(opacity=100);
+        color: #d3d3d3; }
     body.math-ui-show #math-ui-bar > .panel > .panel-body {
-      padding-top: 0;
-      padding-bottom: 0;
+      padding: 8px;
       overflow: auto; }
+      body.math-ui-show #math-ui-bar > .panel > .panel-body > h5 > a {
+        font-size: 60%; }
 
 @media (min-width: 600px) {
   html, body {
@@ -4081,21 +4091,10 @@ body.math-ui-show #math-ui-bar {
   body.math-ui-show #math-ui-bar {
     display: block;
     position: fixed;
-    visibility: visible;
-    overflow: hidden;
     top: 0;
     bottom: 0;
     right: 0; }
     body.math-ui-show #math-ui-bar > .panel {
       border-radius: 0; }
-      body.math-ui-show #math-ui-bar > .panel > .panel-heading, body.math-ui-show #math-ui-bar > .panel > .panel-body {
-        position: fixed;
-        right: 0;
-        width: 200px; }
       body.math-ui-show #math-ui-bar > .panel > .panel-heading {
-        top: 0;
-        height: 36px;
-        overflow: hidden; }
-      body.math-ui-show #math-ui-bar > .panel > .panel-body {
-        top: 36px;
-        bottom: 0; } }
+        border-radius: 0; } }
